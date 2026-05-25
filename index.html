@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Dữ Liệu Nghiên Cứu Lão Khoa Dọc</title>
+    <!-- Bootstrap 5 CSS & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Thư viện SheetJS để xuất file Excel (.xlsx) chuẩn cho SPSS/R -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card-header { background-color: #fff; border-bottom: 2px solid #f1f3f5; font-weight: bold; color: #1e3a8a; }
+        
+        /* Trạng thái đổi màu trực quan: Chưa chọn = Xám, Đã chọn = Đổi màu */
+        .btn-group-toggle .btn {
+            background-color: #e9ecef; color: #495057; border: 1px solid #ced4da;
+            transition: all 0.2s ease; margin-right: 5px; margin-bottom: 5px; border-radius: 6px !important;
+        }
+        .btn-group-toggle input[type="radio"]:checked + .btn {
+            background-color: #0d6efd !important; color: #fff !important; border-color: #0d6efd !important;
+            font-weight: 600; box-shadow: 0 3px 6px rgba(13,110,253,0.3);
+        }
+        
+        .checkbox-box {
+            background-color: #e9ecef; padding: 10px 15px; border-radius: 6px; cursor: pointer;
+            transition: all 0.2s; display: block; margin-bottom: 8px; border: 1px solid #ced4da;
+        }
+        .checkbox-box:has(input:checked) { background-color: #d1e7dd; border-color: #a3cfbb; color: #0f5132; }
+        .score-display { background-color: #e7f1ff; border-left: 5px solid #0d6efd; padding: 15px; border-radius: 4px; font-weight: bold; }
+        .nav-pills .nav-link { color: #495057; background-color: #fff; margin-bottom: 8px; text-align: left; border-radius: 8px;}
+        .nav-pills .nav-link.active { background-color: #1e3a8a; color: #fff; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid py-4">
+    <!-- Thanh điều khiển trên cùng -->
+    <div class="row mb-4">
+        <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-md-center bg-white p-3 rounded shadow-sm">
+            <div>
+                <h4 class="fw-bold text-primary mb-1"><i class="fa-solid fa-database me-2"></i>CÔNG CỤ QUẢN LÝ DATABASE NGHIÊN CỨU DỌC</h4>
+                <small class="text-muted">Đề tài: Tiêm vắc-xin cúm tại giường trước xuất viện cho người cao tuổi dễ tổn thương tại BV Lão khoa TW</small>
+            </div>
+            <div class="mt-3 mt-md-0 d-flex gap-2">
+                <button class="btn btn-success" onclick="exportAllToExcel()"><i class="fa-solid fa-file-excel me-1"></i> Xuất Toàn Bộ CSDL Excel</button>
+                <button class="btn btn-primary" onclick="createNewPatient()"><i class="fa-solid fa-user-plus"></i> Thêm BN Mới</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Bảng điều khiển, Tìm kiếm & Danh sách Bệnh nhân dọc -->
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header"><i class="fa-solid fa-magnifying-glass me-2"></i>Tìm Kiếm & Truy Vết Dọc</div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-white"><i class="fa-solid fa-id-badge text-muted"></i></span>
+                        <input type="text" id="search_patient_id" class="form-control" placeholder="Nhập Mã BN (Ví dụ: BN001)..." onkeyup="filterPatients()">
+                    </div>
+                    <label class="form-label small fw-bold text-muted">DANH SÁCH BỆNH NHÂN TRONG COHORT</label>
+                    <div class="list-group overflow-auto" id="patient_list_group" style="max-height: 200px;">
+                        <!-- Danh sách BN sẽ tự động render ở đây -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header"><i class="fa-solid fa-clock-history me-2"></i>Trục Thời Gian Dọc</div>
+                <div class="card-body p-2">
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#sec-t0" type="button" onclick="switchTimeline('T0')"><i class="fa-solid fa-file-medical me-2"></i>Thời điểm Nền (T0)</button>
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#sec-t1-t3" type="button" onclick="switchTimeline('T1_T3')"><i class="fa-solid fa-phone-volume me-2"></i>Theo dõi dọc (T1, T3)</button>
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#sec-t6-t12" type="button" onclick="switchTimeline('T6_T12')"><i class="fa-solid fa-hospital-user me-2"></i>Tái khám dọc (T6, T12)</button>
+                    </div>
+                    <div class="mt-3 p-2 bg-light rounded border text-center">
+                        <small class="text-muted d-block">Đang hiệu chỉnh bệnh nhân:</small>
+                        <strong class="text-danger h5 d-block my-1" id="current_editing_label">CHƯA CHỌN</strong>
+                        <button class="btn btn-sm btn-warning w-100 mt-1" onclick="saveCurrentPatient()"><i class="fa-solid fa-floppy-disk"></i> Lưu cập nhật dữ liệu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vùng nhập liệu biểu mẫu biểu mẫu tương ứng -->
+        <div class="col-lg-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                
+                <!-- THỜI ĐIỂM NỀN T0 -->
+                <div class="tab-pane fade show active" id="sec-t0" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">THÔNG TIN HÀNH CHÍNH & SÀNG LỌC (T0)</div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Mã bệnh nhân (Khóa định danh) <span class="text-danger">*</span></label>
+                                    <input type="text" id="t0_ma_bn" class="form-control form-control-lg fw-bold text-danger text-uppercase" placeholder="Ví dụ: BN001">
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">Họ tên người bệnh</label>
+                                    <input type="text" id="t0_ho_ten" class="form-control form-control-lg">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Giới tính</label>
+                                    <div class="btn-group-toggle d-flex">
+                                        <input type="radio" class="btn-check" name="t0_gioi_tinh" id="g_nam" value="0"><label class="btn w-100" for="g_nam">Nam</label>
+                                        <input type="radio" class="btn-check" name="t0_gioi_tinh" id="g_nu" value="1"><label class="btn w-100" for="g_nu">Nữ</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Ngày sinh</label>
+                                    <input type="date" id="t0_ngay_sinh" class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Thang điểm CFS đầu vào</label>
+                                    <select id="t0_cfs" class="form-select border-primary" onchange="autoCalculateT0()">
+                                        <option value="">-- Chọn mức CFS --</option>
+                                        <option value="5">5 - Mildly Frail</option>
+                                        <option value="6">6 - Moderately Frail</option>
+                                        <option value="7">7 - Severely Frail[cite: 1, 2]</option>
+                                        <option value="8">8 - Very Severely Frail[cite: 1, 2]</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Phân nhóm sau tư vấn[cite: 1, 2]</label>
+                                    <select id="t0_phan_nhom" class="form-select">
+                                        <option value="">-- Chọn nhóm --</option>
+                                        <option value="1">Nhóm 1: Can thiệp (Tiêm vắc-xin)[cite: 1, 2]</option>
+                                        <option value="2">Nhóm 2: Chứng nội tại (Từ chối)[cite: 1, 2]</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white">ĐÁNH GIÁ CHỨC NĂNG BARTHEL TẠI THỜI ĐIỂM NỀN (T0)[cite: 1]</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Ăn uống[cite: 1]</label>
+                                    <div class="btn-group-toggle d-flex mb-3">
+                                        <input type="radio" class="btn-check" name="t0_b_eat" id="be0" value="0" onchange="autoCalculateT0()"><label class="btn small w-100" for="be0">Lệ thuộc (0)[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="t0_b_eat" id="be5" value="5" onchange="autoCalculateT0()"><label class="btn small w-100" for="be5">Cần giúp (5)[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="t0_b_eat" id="be10" value="10" onchange="autoCalculateT0()"><label class="btn small w-100" for="be10">Tự lập (10)[cite: 1]</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Khả năng đi lại[cite: 1]</label>
+                                    <div class="btn-group-toggle d-flex mb-3">
+                                        <input type="radio" class="btn-check" name="t0_b_walk" id="bw0" value="0" onchange="autoCalculateT0()"><label class="btn small w-100" for="bw0">Bất động (0)[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="t0_b_walk" id="bw5" value="5" onchange="autoCalculateT0()"><label class="btn small w-100" for="bw5">Xe lăn (5)[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="t0_b_walk" id="bw10" value="10" onchange="autoCalculateT0()"><label class="btn small w-100" for="bw10">Cần giúp đỡ (10)[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="t0_b_walk" id="bw15" value="15" onchange="autoCalculateT0()"><label class="btn small w-100" for="bw15">Độc lập (15)[cite: 1]</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="score-display mt-2" id="t0_barthel_display">Tổng điểm Barthel T0: Chưa chọn đủ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THEO DÕI DỌC QUA ĐIỆN THOẠI T1, T3 -->
+                <div class="tab-pane fade" id="sec-t1-t3" role="tabpanel">
+                    <div class="card border-info">
+                        <div class="card-header bg-info text-dark">THEO DÕI BIẾN CỐ DỌC QUA ĐIỆN THOẠI THÁNG 1 & THÁNG 3[cite: 2]</div>
+                        <div class="card-body">
+                            <h5 class="text-primary fw-bold mb-3"><i class="fa-solid fa-phone"></i> Biến cố xảy ra tại mốc Tháng 1 (T1)[cite: 1, 2]</h5>
+                            <div class="row g-2 mb-4">
+                                <div class="col-md-3"><label class="checkbox-box"><input type="checkbox" id="t1_ili" class="me-2"> <span>Hội chứng giống cúm (ILI)[cite: 1, 2]</span></label></div>
+                                <div class="col-md-3"><label class="checkbox-box"><input type="checkbox" id="t1_viem_phoi" class="me-2"> <span>Viêm phổi cộng đồng[cite: 1, 2]</span></label></div>
+                                <div class="col-md-3"><label class="checkbox-box"><input type="checkbox" id="t1_tai_nhap" class="me-2"> <span>Tái nhập viện hô hấp[cite: 1, 2]</span></label></div>
+                                <div class="col-md-3"><label class="checkbox-box"><input type="checkbox" id="t1_dot_quy" class="me-2"> <span>Đột quỵ mới phát[cite: 1, 2]</span></label></div>
+                                <div class="col-md-12">
+                                    <label class="form-label small">Số lần té ngã thực tế trong tháng 1[cite: 1, 2]</label>
+                                    <input type="number" id="t1_te_nga" class="form-control form-control-sm" style="width: 150px;" value="0">
+                                </div>
+                            </div>
+
+                            <h5 class="text-primary fw-bold mb-3"><i class="fa-solid fa-phone"></i> Biến cố xảy ra tại mốc Tháng 3 (T3)[cite: 1, 2]</h5>
+                            <div class="row g-2">
+                                <div class="col-md-3"><label class="checkbox-box"><input type="checkbox" id="t3_ili" class="me-2"> <span>Hội chứng giống cúm (ILI)[cite: 1, 2]</span></label></div>
+                                <div class="col-md-3"><label class="checkbox-box"><input type="checkbox" id="t3_viem_phoi" class="me-2"> <span>Viêm phổi cộng đồng[cite: 1, 2]</span></label></div>
+                                <div class="col-md-3"><label class="checkbox-box"><input type="checkbox" id="t3_tai_nhap" class="me-2"> <span>Tái nhập viện hô hấp[cite: 1, 2]</span></label></div>
+                                <div class="col-md-3"><label class="checkbox-box"><input type="checkbox" id="t3_dot_quy" class="me-2"> <span>Đột quỵ mới phát[cite: 1, 2]</span></label></div>
+                                <div class="col-md-12">
+                                    <label class="form-label small">Số lần té ngã thực tế trong tháng 3[cite: 1, 2]</label>
+                                    <input type="number" id="t3_te_nga" class="form-control form-control-sm" style="width: 150px;" value="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TÁI KHÁM ĐÁNH GIÁ LẠI T6, T12 -->
+                <div class="tab-pane fade" id="sec-t6-t12" role="tabpanel">
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white">ĐÁNH GIÁ LÃO KHOA TOÀN DIỆN RE-CGA (THÁNG 6 & THÁNG 12)[cite: 1, 2]</div>
+                        <div class="card-body">
+                            <div class="row g-4">
+                                <div class="col-md-6 border-end">
+                                    <h5 class="fw-bold text-success">Mốc tái khám Tháng 6 (T6)[cite: 1, 2]</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Điểm nhận thức MoCA T6[cite: 1, 2]</label>
+                                        <input type="number" id="t6_moca" class="form-control" min="0" max="30">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Điểm dễ tổn thương CFS T6[cite: 1, 2]</label>
+                                        <input type="number" id="t6_cfs" class="form-control" min="1" max="9">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="checkbox-box"><input type="checkbox" id="t6_tu_vong" class="me-2"> Ghi nhận tử vong mốc T6[cite: 1, 2]</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="fw-bold text-success">Mốc tái khám Tháng 12 (T12)[cite: 1, 2]</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Điểm nhận thức MoCA T12[cite: 1, 2]</label>
+                                        <input type="number" id="t12_moca" class="form-control" min="0" max="30">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Điểm dễ tổn thương CFS T12[cite: 1, 2]</label>
+                                        <input type="number" id="t12_cfs" class="form-control" min="1" max="9">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="checkbox-box"><input type="checkbox" id="t12_tu_vong" class="me-2"> Ghi nhận tử vong mốc T12[cite: 1, 2]</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Biến toàn cục chứa toàn bộ Database của Cohort nghiên cứu
+    let database = JSON.parse(localStorage.getItem('geriatric_cohort_db')) || {};
+    let currentPatientId = null;
+
+    window.onload = function() {
+        renderPatientList();
+    };
+
+    // Tạo form trống cho Bệnh nhân mới
+    function createNewPatient() {
+        currentPatientId = null;
+        document.getElementById('current_editing_label').innerText = "BỆNH NHÂN MỚI";
+        document.getElementById('t0_ma_bn').disabled = false;
+        
+        // Reset toàn bộ trường nhập dữ liệu trên form
+        document.getElementById('t0_ma_bn').value = "";
+        document.getElementById('t0_ho_ten').value = "";
+        document.getElementById('t0_ngay_sinh').value = "";
+        document.getElementById('t0_cfs').value = "";
+        document.getElementById('t0_phan_nhom').value = "";
+        document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+        document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+        document.querySelectorAll('input[type="number"]').forEach(n => n.value = 0);
+        document.getElementById('t6_moca').value = "";
+        document.getElementById('t6_cfs').value = "";
+        document.getElementById('t12_moca').value = "";
+        document.getElementById('t12_cfs').value = "";
+
+        autoCalculateT0();
+    }
+
+    // Tải dữ liệu bệnh nhân đã có lên form để cập nhật dọc
+    function loadPatient(id) {
+        currentPatientId = id;
+        const p = database[id];
+        document.getElementById('current_editing_label').innerText = p.t0_ma_bn;
+        
+        // Đổ dữ liệu T0
+        document.getElementById('t0_ma_bn').value = p.t0_ma_bn;
+        document.getElementById('t0_ma_bn').disabled = true; // Không cho sửa mã định danh
+        document.getElementById('t0_ho_ten').value = p.t0_ho_ten;
+        document.getElementById('t0_ngay_sinh').value = p.t0_ngay_sinh;
+        document.getElementById('t0_cfs').value = p.t0_cfs;
+        document.getElementById('t0_phan_nhom').value = p.t0_phan_nhom;
+        
+        if(p.t0_gioi_tinh === "0") document.getElementById('g_nam').checked = true;
+        if(p.t0_gioi_tinh === "1") document.getElementById('g_nu').checked = true;
+
+        // Điểm Barthel T0[cite: 1]
+        if(p.t0_b_eat) document.getElementById(`be${p.t0_b_eat}`).checked = true;
+        if(p.t0_b_walk) document.getElementById(`bw${p.t0_b_walk}`).checked = true;
+
+        // Đổ dữ liệu biến cố dọc T1, T3[cite: 2]
+        document.getElementById('t1_ili').checked = p.t1_ili || false;
+        document.getElementById('t1_viem_phoi').checked = p.t1_viem_phoi || false;
+        document.getElementById('t1_tai_nhap').checked = p.t1_tai_nhap || false;
+        document.getElementById('t1_dot_quy').checked = p.t1_dot_quy || false;
+        document.getElementById('t1_te_nga').value = p.t1_te_nga || 0;
+
+        document.getElementById('t3_ili').checked = p.t3_ili || false;
+        document.getElementById('t3_viem_phoi').checked = p.t3_viem_phoi || false;
+        document.getElementById('t3_tai_nhap').checked = p.t3_tai_nhap || false;
+        document.getElementById('t3_dot_quy').checked = p.t3_dot_quy || false;
+        document.getElementById('t3_te_nga').value = p.t3_te_nga || 0;
+
+        // Đổ dữ liệu tái khám T6, T12[cite: 2]
+        document.getElementById('t6_moca').value = p.t6_moca || "";
+        document.getElementById('t6_cfs').value = p.t6_cfs || "";
+        document.getElementById('t6_tu_vong').checked = p.t6_tu_vong || false;
+        document.getElementById('t12_moca').value = p.t12_moca || "";
+        document.getElementById('t12_cfs').value = p.t12_cfs || "";
+        document.getElementById('t12_tu_vong').checked = p.t12_tu_vong || false;
+
+        autoCalculateT0();
+    }
+
+    // Lưu dữ liệu vào CSDL cục bộ LocalStorage
+    function saveCurrentPatient() {
+        const maBn = document.getElementById('t0_ma_bn').value.trim().toUpperCase();
+        if(!maBn) { alert("Bắt buộc phải nhập Mã bệnh nhân để làm khóa định danh dữ liệu dọc!"); return; }
+
+        const gioiTinhEl = document.querySelector('input[name="t0_gioi_tinh"]:checked');
+        const bEatEl = document.querySelector('input[name="t0_b_eat"]:checked');
+        const bWalkEl = document.querySelector('input[name="t0_b_walk"]:checked');
+
+        // Khởi tạo object chứa bản ghi của bệnh nhân này
+        database[maBn] = {
+            t0_ma_bn: maBn,
+            t0_ho_ten: document.getElementById('t0_ho_ten').value,
+            t0_gioi_tinh: gioiTinhEl ? gioiTinhEl.value : "",
+            t0_ngay_sinh: document.getElementById('t0_ngay_sinh').value,
+            t0_cfs: document.getElementById('t0_cfs').value,
+            t0_phan_nhom: document.getElementById('t0_phan_nhom').value,
+            t0_b_eat: bEatEl ? bEatEl.value : "",
+            t0_b_walk: bWalkEl ? bWalkEl.value : "",
+            
+            // Số liệu dọc mốc T1[cite: 2]
+            t1_ili: document.getElementById('t1_ili').checked,
+            t1_viem_phoi: document.getElementById('t1_viem_phoi').checked,
+            t1_tai_nhap: document.getElementById('t1_tai_nhap').checked,
+            t1_dot_quy: document.getElementById('t1_dot_quy').checked,
+            t1_te_nga: parseInt(document.getElementById('t1_te_nga').value) || 0,
+
+            // Số liệu dọc mốc T3[cite: 2]
+            t3_ili: document.getElementById('t3_ili').checked,
+            t3_viem_phoi: document.getElementById('t3_viem_phoi').checked,
+            t3_tai_nhap: document.getElementById('t3_tai_nhap').checked,
+            t3_dot_quy: document.getElementById('t3_dot_quy').checked,
+            t3_te_nga: parseInt(document.getElementById('t3_te_nga').value) || 0,
+
+            // Số liệu mốc T6 & T12[cite: 2]
+            t6_moca: document.getElementById('t6_moca').value,
+            t6_cfs: document.getElementById('t6_cfs').value,
+            t6_tu_vong: document.getElementById('t6_tu_vong').checked,
+            t12_moca: document.getElementById('t12_moca').value,
+            t12_cfs: document.getElementById('t12_cfs').value,
+            t12_tu_vong: document.getElementById('t12_tu_vong').checked
+        };
+
+        localStorage.setItem('geriatric_cohort_db', JSON.stringify(database));
+        alert(`Đã lưu thành công dữ liệu dọc cho bệnh nhân: ${maBn}`);
+        currentPatientId = maBn;
+        document.getElementById('current_editing_label').innerText = maBn;
+        renderPatientList();
+    }
+
+    // Hiển thị danh sách bệnh nhân lên bảng điều khiển bên trái
+    function renderPatientList() {
+        const group = document.getElementById('patient_list_group');
+        group.innerHTML = "";
+        Object.keys(database).forEach(id => {
+            const p = database[id];
+            const groupText = p.t0_phan_nhom === "1" ? "Nhóm Can thiệp" : "Nhóm Chứng";
+            group.innerHTML += `
+                <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="loadPatient('${id}')">
+                    <div>
+                        <strong class="text-primary">${p.t0_ma_bn}</strong> - <small>${p.t0_ho_ten || 'Không tên'}</small>
+                    </div>
+                    <span class="badge bg-secondary rounded-pill small">${groupText}</span>
+                </button>
+            `;
+        });
+    }
+
+    // Bộ lọc tìm kiếm nhanh mã bệnh nhân
+    function filterPatients() {
+        const val = document.getElementById('search_patient_id').value.toUpperCase();
+        const items = document.getElementById('patient_list_group').getElementsByTagName('button');
+        for (let i = 0; i < items.length; i++) {
+            let text = items[i].innerText || items[i].textContent;
+            if (text.toUpperCase().indexOf(val) > -1) items[i].style.display = "";
+            else items[i].style.display = "none";
+        }
+    }
+
+    // Tính điểm tự động Barthel T0[cite: 1]
+    function autoCalculateT0() {
+        const bEatEl = document.querySelector('input[name="t0_b_eat"]:checked');
+        const bWalkEl = document.querySelector('input[name="t0_b_walk"]:checked');
+        const display = document.getElementById('t0_barthel_display');
+
+        if(bEatEl && bWalkEl) {
+            let score = parseInt(bEatEl.value) + parseInt(bWalkEl.value);
+            display.innerText = `Tổng điểm Barthel T0: ${score} điểm.`;
+            display.className = "score-display mt-2 bg-success text-white";
+        } else {
+            display.innerText = "Tổng điểm Barthel T0: Chưa chọn đủ trường để chấm điểm.";
+            display.className = "score-display mt-2 bg-light text-dark";
+        }
+    }
+
+    // XUẤT FILE EXCEL (.XLSX) CẤU TRÚC PHẲNG CHUẨN ĐỂ ĐỔ VÀO SPSS/R
+    function exportAllToExcel() {
+        if(Object.keys(database).length === 0) { alert("Database hiện tại chưa có bệnh nhân nào!"); return; }
+        
+        // Chuyển đổi cấu trúc Map Object sang Array phẳng dạng bảng tính
+        const rawRows = Object.values(database);
+        
+        // Tạo bảng tính mới bằng SheetJS
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(rawRows);
+        
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Cohort_Data_Longitudinal");
+        
+        // Thực hiện lệnh tải xuống file Excel
+        XLSX.writeFile(workbook, "CSDL_NghienCuu_LaoKhoa_Doc.xlsx");
+    }
+
+    function switchTimeline(phase) {
+        console.log("Đã chuyển sang giai đoạn theo dõi dọc: " + phase);
+    }
+</script>
+</body>
+</html>
