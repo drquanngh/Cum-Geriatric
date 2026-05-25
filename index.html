@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ỨNG DỤNG LÂM SÀNG: QUẢN LÝ CRF ĐIỆN TỬ DỌC</title>
-    <!-- Bootstrap 5 & FontAwesome Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Thư viện chuyên dụng kết xuất file Excel (.xlsx) cấu trúc phẳng -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -15,7 +13,7 @@
         .card { border: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .card-header { background-color: #fff; border-bottom: 2px solid #f1f3f5; font-weight: bold; color: #1e3a8a; }
         
-        /* Luật màu trực quan theo ảnh thực tế: Chưa chọn = Xám, Đã chọn = Đổi màu xanh dương */
+        /* Luật màu trực quan theo ảnh: Chưa chọn = Xám, Đã chọn = Đổi màu xanh dương */
         .btn-group-toggle .btn {
             background-color: #e9ecef; color: #495057; border: 1px solid #ced4da;
             transition: all 0.15s ease; margin-right: 4px; margin-bottom: 4px; border-radius: 6px !important;
@@ -35,7 +33,8 @@
         }
 
         .score-display { background-color: #e7f1ff; border-left: 5px solid #0d6efd; padding: 12px; border-radius: 4px; font-weight: bold; }
-        .nav-pills .nav-link { color: #495057; background-color: #fff; margin-bottom: 8px; border-radius: 6px; text-align: left; }
+        .nav-pills .nav-link { color: #495057; background-color: #fff; margin-bottom: 8px; border-radius: 6px; text-align: left; transition: all 0.2s; }
+        .nav-pills .nav-link:hover { background-color: #f1f3f5; }
         .nav-pills .nav-link.active { background-color: #1e3a8a; color: #fff; font-weight: bold; }
         .required-star { color: red; }
         .form-label { font-weight: 500; color: #343a40; margin-bottom: 0.25rem; }
@@ -44,7 +43,6 @@
 <body>
 
 <div class="container-fluid py-4">
-    <!-- Thanh công cụ trên cùng -->
     <div class="row mb-3">
         <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-md-center bg-white p-3 rounded shadow-sm border-start border-primary border-4">
             <div>
@@ -59,7 +57,6 @@
     </div>
 
     <div class="row">
-        <!-- Cột trái: Định danh, Tìm kiếm bệnh nhân & Trục thời gian dọc -->
         <div class="col-lg-3 sidebar-card">
             <div class="card mb-3">
                 <div class="card-header text-primary"><i class="fa-solid fa-address-card me-2"></i>Thông Tin Định Danh</div>
@@ -79,9 +76,8 @@
                 <div class="card-header text-primary"><i class="fa-solid fa-magnifying-glass me-2"></i>Tìm Kiếm & Truy Vết Dọc</div>
                 <div class="card-body p-2">
                     <input type="text" id="search_id" class="form-control form-control-sm mb-2" placeholder="Gõ Mã BN để tìm kiếm..." onkeyup="filterPatients()">
-                    <div class="list-group overflow-auto" id="patient_list_group" style="max-height: 180px;">
-                        <!-- Render danh sách bệnh nhân thực tế -->
-                    </div>
+                    <div class="list-group overflow-auto" id="patient_list_group" style="max-height: 150px;">
+                        </div>
                 </div>
             </div>
 
@@ -89,12 +85,12 @@
                 <div class="card-header text-primary"><i class="fa-solid fa-timeline me-2"></i>Trục Theo Dõi Dọc</div>
                 <div class="card-body p-2">
                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
-                        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#sec-p1-2-3" type="button"><i class="fa-solid fa-file-medical me-2"></i>Phần I-III: Sàng lọc & Nhóm</button>
-                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#sec-p4" type="button"><i class="fa-solid fa-heart-pulse me-2"></i>Phần IV: Đánh giá Nền (T0)</button>
-                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#sec-p5-6" type="button"><i class="fa-solid fa-syringe me-2"></i>Phần V-VI: Xét nghiệm & Tiêm</button>
-                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#sec-p7" type="button"><i class="fa-solid fa-shield-virus me-2"></i>Phần VII: An toàn 30 ngày</button>
-                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#sec-p8" type="button"><i class="fa-solid fa-phone-volume me-2"></i>Phần VIII: Theo dõi T1-T12</button>
-                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#sec-p9" type="button"><i class="fa-solid fa-hospital-user me-2"></i>Phần IX: Tái khám T6 & T12</button>
+                        <button class="nav-link active" id="tab-p1-2-3" data-bs-toggle="pill" data-bs-target="#sec-p1-2-3" type="button" role="tab"><i class="fa-solid fa-file-medical me-2"></i>Phần I-III: Sàng lọc & Nhóm</button>
+                        <button class="nav-link" id="tab-p4" data-bs-toggle="pill" data-bs-target="#sec-p4" type="button" role="tab"><i class="fa-solid fa-heart-pulse me-2"></i>Phần IV: Đánh giá Nền (T0)</button>
+                        <button class="nav-link" id="tab-p5-6" data-bs-toggle="pill" data-bs-target="#sec-p5-6" type="button" role="tab"><i class="fa-solid fa-syringe me-2"></i>Phần V-VI: Xét nghiệm & Tiêm</button>
+                        <button class="nav-link" id="tab-p7" data-bs-toggle="pill" data-bs-target="#sec-p7" type="button" role="tab"><i class="fa-solid fa-shield-virus me-2"></i>Phần VII: An toàn 30 ngày</button>
+                        <button class="nav-link" id="tab-p8" data-bs-toggle="pill" data-bs-target="#sec-p8" type="button" role="tab"><i class="fa-solid fa-phone-volume me-2"></i>Phần VIII: Theo dõi T1-T12</button>
+                        <button class="nav-link" id="tab-p9" data-bs-toggle="pill" data-bs-target="#sec-p9" type="button" role="tab"><i class="fa-solid fa-hospital-user me-2"></i>Phần IX: Tái khám T6 & T12</button>
                     </div>
                     <div class="p-2 mt-3 bg-light rounded text-center border">
                         <small class="text-muted d-block">Đang hiệu chỉnh:</small>
@@ -105,12 +101,10 @@
             </div>
         </div>
 
-        <!-- Cột phải: Khối nhập liệu chi tiết phân tab -->
         <div class="col-lg-9">
             <div class="tab-content" id="v-pills-tabContent">
                 
-                <!-- TAB 1: HÀNH CHÍNH & SÀNG LỌC -->
-                <div class="tab-pane fade show active" id="sec-p1-2-3" role="tabpanel">
+                <div class="tab-pane fade show active" id="sec-p1-2-3" role="tabpanel" aria-labelledby="tab-p1-2-3">
                     <div class="card">
                         <div class="card-header text-primary">PHẦN I & II. HÀNH CHÍNH & NHÂN KHẨU HỌC – XÃ HỘI</div>
                         <div class="card-body">
@@ -120,26 +114,26 @@
                                     <input type="text" id="a00_name" class="form-control" placeholder="Nguyễn Thị Bích Ngọc">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Giới tính[cite: 1]</label>
+                                    <label class="form-label small">Giới tính</label>
                                     <div class="btn-group-toggle d-flex">
                                         <input type="radio" class="btn-check" name="a01_gender" id="a01_g0" value="0" onchange="calcEGFR()"><label class="btn w-100" for="a01_g0">Nam</label>
                                         <input type="radio" class="btn-check" name="a01_gender" id="a01_g1" value="1" onchange="calcEGFR()"><label class="btn w-100" for="a01_g1">Nữ</label>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Ngày sinh[cite: 1]</label>
+                                    <label class="form-label small">Ngày sinh</label>
                                     <input type="date" id="a02_dob" class="form-control" onchange="calculateAge()">
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label small">Khoa điều trị nội trú[cite: 1]</label>
+                                    <label class="form-label small">Khoa điều trị nội trú</label>
                                     <input type="text" id="a06_dept" class="form-control" placeholder="Hồi sức tích cực">
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label small">Ngày nhập viện[cite: 1]</label>
+                                    <label class="form-label small">Ngày nhập viện</label>
                                     <input type="date" id="a07_dov" class="form-control">
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label small">Kinh tế hộ gia đình[cite: 1]</label>
+                                    <label class="form-label small">Kinh tế hộ gia đình</label>
                                     <div class="btn-group-toggle d-flex">
                                         <input type="radio" class="btn-check" name="b06_eco" id="b06_e0" value="0"><label class="btn small w-100" for="b06_e0">Nghèo/Cận</label>
                                         <input type="radio" class="btn-check" name="b06_eco" id="b06_e1" value="1"><label class="btn small w-100" for="b06_e1">Trung bình</label>
@@ -151,22 +145,22 @@
                     </div>
 
                     <div class="card border-warning">
-                        <div class="card-header bg-warning text-dark fw-bold">PHẦN III. TIÊU CHÍ SÀNG LỌC BẮT BUỘC (INCLUSION & EXCLUSION)[cite: 1]</div>
+                        <div class="card-header bg-warning text-dark fw-bold">PHẦN III. TIÊU CHÍ SÀNG LỌC BẮT BUỘC (INCLUSION & EXCLUSION)</div>
                         <div class="card-body">
-                            <h6 class="fw-bold text-success"><i class="fa-solid fa-square-check me-2"></i>3.1 Tiêu chí đưa vào (Phải đáp ứng tất cả ĐẠT)[cite: 1]</h6>
+                            <h6 class="fw-bold text-success"><i class="fa-solid fa-square-check me-2"></i>3.1 Tiêu chí đưa vào (Phải đáp ứng tất cả ĐẠT)</h6>
                             <div class="row g-2 mb-3 align-items-end">
                                 <div class="col-md-4">
-                                    <div class="p-2 border rounded bg-light small" style="height:38px; line-height:22px;">Tuổi ≥60: <b id="lbl_age_check" class="text-danger">Chưa rõ</b>[cite: 1]</div>
+                                    <div class="p-2 border rounded bg-light small" style="height:38px; line-height:22px;">Tuổi ≥60: <b id="lbl_age_check" class="text-danger">Chưa rõ</b></div>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label small">Nội trú dự kiến ≥48h[cite: 1]</label>
+                                    <label class="form-label small">Nội trú dự kiến ≥48h</label>
                                     <div class="btn-group-toggle d-flex">
                                         <input type="radio" class="btn-check" name="c02_stay" id="c02_1" value="1"><label class="btn small w-100" for="c02_1">Đạt</label>
                                         <input type="radio" class="btn-check" name="c02_stay" id="c02_0" value="0"><label class="btn small w-100" for="c02_0">K.Đạt</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label small">Ký cam kết ICF[cite: 1]</label>
+                                    <label class="form-label small">Ký cam kết ICF</label>
                                     <div class="btn-group-toggle d-flex">
                                         <input type="radio" class="btn-check" name="c06_icf" id="c06_1" value="1"><label class="btn small w-100" for="c06_1">Đồng ý</label>
                                         <input type="radio" class="btn-check" name="c06_icf" id="c06_0" value="0"><label class="btn small w-100" for="c06_0">Từ chối</label>
@@ -174,19 +168,19 @@
                                 </div>
                             </div>
 
-                            <h6 class="fw-bold text-danger"><i class="fa-solid fa-square-xmark me-2"></i>3.2 Tiêu chí loại trừ (Nếu tích chọn bất kỳ ô nào → LOẠI KHỎI NGHIÊN CỨU)[cite: 1]</h6>
+                            <h6 class="fw-bold text-danger"><i class="fa-solid fa-square-xmark me-2"></i>3.2 Tiêu chí loại trừ (Nếu tích chọn bất kỳ ô nào → LOẠI)</h6>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_1"> <span>Đã tiêm vắc-xin cúm < 6 tháng[cite: 1]</span></label>
-                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_2"> <span>Dị ứng trứng / thành phần vắc-xin[cite: 1]</span></label>
-                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_3"> <span>Tiền sử phản vệ vắc-xin cúm[cite: 1]</span></label>
-                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_4"> <span>Sốt ≥38,5°C lúc sàng lọc[cite: 1]</span></label>
+                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_1"> <span>Đã tiêm vắc-xin cúm < 6 tháng trước nhập viện [cite: 14]</span></label>
+                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_2"> <span>Dị ứng trứng hoặc thành phần vắc-xin cúm [cite: 14]</span></label>
+                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_3"> <span>Phản vệ với bất kỳ liều vắc-xin cúm nào [cite: 14]</span></label>
+                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_4"> <span>Sốt ≥38,5°C tại thời điểm sàng lọc [cite: 14]</span></label>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_5"> <span>Bệnh cấp tính nặng (ICU/sốc/suy tạng)[cite: 1]</span></label>
-                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_6"> <span>Hội chứng Guillain-Barré < 6 tuần[cite: 1]</span></label>
-                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_7"> <span>Rối loạn đông máu nặng (TC <50, INR >3)[cite: 1]</span></label>
-                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_8"> <span>Bệnh ác tính giai đoạn cuối (sống <3 th)[cite: 1]</span></label>
+                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_5"> <span>Đang mắc bệnh cấp tính nặng (ICU/sốc) [cite: 14]</span></label>
+                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_6"> <span>Hội chứng Guillain-Barré trong 6 tuần [cite: 14]</span></label>
+                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_7"> <span>Rối loạn đông máu nặng (TC <50 G/L) [cite: 14]</span></label>
+                                    <label class="checkbox-box"><input type="checkbox" class="me-2" id="exc_8"> <span>Bệnh ác tính giai đoạn cuối (tiên lượng <3 th) [cite: 14]</span></label>
                                 </div>
                             </div>
                             <div class="alert alert-info mt-3 fw-bold mb-0" id="screening_result">KẾT QUẢ SÀNG LỌC: Đang chờ nhập thông tin...</div>
@@ -194,38 +188,37 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: ĐÁNH GIÁ NỀN TOÀN DIỆN T0 -->
-                <div class="tab-pane fade" id="sec-p4" role="tabpanel">
+                <div class="tab-pane fade" id="sec-p4" role="tabpanel" aria-labelledby="tab-p4">
                     <div class="card">
-                        <div class="card-header text-primary">4.1 NHÂN TRẮC HỌC & SINH HIỆU LÚC NHẬP VIỆN[cite: 1]</div>
+                        <div class="card-header text-primary">4.1 NHÂN TRẮC HỌC & SINH HIỆU LÚC NHẬP VIỆN</div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-3">
-                                    <label class="form-label small">Chiều cao (cm)[cite: 1]</label>
+                                    <label class="form-label small">Chiều cao (cm) [cite: 15]</label>
                                     <input type="number" id="d01_height" class="form-control form-control-sm" oninput="calculateBMI()">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Cân nặng (kg)[cite: 1]</label>
+                                    <label class="form-label small">Cân nặng (kg) [cite: 15]</label>
                                     <input type="number" id="d02_weight" class="form-control form-control-sm" oninput="calculateBMI()">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small">BMI tự động tính[cite: 1]</label>
+                                    <label class="form-label small">BMI tự động tính [cite: 15]</label>
                                     <div class="p-2 border rounded bg-light fw-bold" id="d03_bmi_res">Chưa đủ dữ liệu chiều cao/cân nặng</div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Huyết áp Tâm thu (mmHg)[cite: 1]</label>
+                                    <label class="form-label small">HA Tâm thu (mmHg) [cite: 15]</label>
                                     <input type="number" id="d04_sbp" class="form-control form-control-sm">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Huyết áp Tâm trương (mmHg)[cite: 1]</label>
+                                    <label class="form-label small">HA Tâm trương (mmHg) [cite: 15]</label>
                                     <input type="number" id="d05_dbp" class="form-control form-control-sm">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">SpO2 (%)[cite: 1]</label>
+                                    <label class="form-label small">SpO2 (%) [cite: 15]</label>
                                     <input type="number" id="d07_spo2" class="form-control form-control-sm">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Nhiệt độ nách (°C)[cite: 1]</label>
+                                    <label class="form-label small">Nhiệt độ nách (°C) [cite: 15]</label>
                                     <input type="number" step="0.1" id="d08_temp" class="form-control form-control-sm">
                                 </div>
                             </div>
@@ -233,64 +226,64 @@
                     </div>
 
                     <div class="card border-primary">
-                        <div class="card-header bg-primary text-white">4.2 ĐÁNH GIÁ LÃO KHOA TOÀN DIỆN (CGA) – PHẦN CHẤM ĐIỂM[cite: 1]</div>
+                        <div class="card-header bg-primary text-white">4.2 ĐÁNH GIÁ LÃO KHOA TOÀN DIỆN (CGA) – CHẤM ĐIỂM</div>
                         <div class="card-body">
-                            <h6 class="fw-bold text-primary mb-2">Thang điểm Dễ tổn thương lâm sàng (Clinical Frailty Scale - CFS)[cite: 1]</h6>
+                            <h6 class="fw-bold text-primary mb-2">Thang điểm Dễ tổn thương lâm sàng (Clinical Frailty Scale - CFS) [cite: 15]</h6>
                             <div class="btn-group-toggle d-flex flex-column mb-4">
-                                <input type="radio" class="btn-check" name="d09_cfs" id="cfs_5" value="5" onchange="runScreeningLogic()"><label class="btn text-start p-2 mb-1" for="cfs_5">Mức 5 - Mildly Frail (Hơi dễ tổn thương)[cite: 1]</label>
-                                <input type="radio" class="btn-check" name="d09_cfs" id="cfs_6" value="6" onchange="runScreeningLogic()"><label class="btn text-start p-2 mb-1" for="cfs_6">Mức 6 - Moderately Frail (Khá dễ tổn thương)[cite: 1]</label>
-                                <input type="radio" class="btn-check" name="d09_cfs" id="cfs_7" value="7" onchange="runScreeningLogic()"><label class="btn text-start p-2 mb-1" for="cfs_7">Mức 7 - Severely Frail (Rất dễ tổn thương)[cite: 1]</label>
-                                <input type="radio" class="btn-check" name="d09_cfs" id="cfs_8" value="8" onchange="runScreeningLogic()"><label class="btn text-start p-2 mb-1" for="cfs_8">Mức 8 - Very Severely Frail (Cực kỳ dễ tổn thương)[cite: 1]</label>
+                                <input type="radio" class="btn-check" name="d09_cfs" id="cfs_5" value="5"><label class="btn text-start p-2 mb-1" for="cfs_5">Mức 5 - Mildly Frail (Hơi dễ tổn thương) [cite: 15]</label>
+                                <input type="radio" class="btn-check" name="d09_cfs" id="cfs_6" value="6"><label class="btn text-start p-2 mb-1" for="cfs_6">Mức 6 - Moderately Frail (Khá dễ tổn thương) [cite: 15]</label>
+                                <input type="radio" class="btn-check" name="d09_cfs" id="cfs_7" value="7"><label class="btn text-start p-2 mb-1" for="cfs_7">Mức 7 - Severely Frail (Rất dễ tổn thương) [cite: 15]</label>
+                                <input type="radio" class="btn-check" name="d09_cfs" id="cfs_8" value="8"><label class="btn text-start p-2 mb-1" for="cfs_8">Mức 8 - Very Severely Frail (Cực kỳ dễ tổn thương) [cite: 15]</label>
                             </div>
 
-                            <h6 class="fw-bold text-primary mb-2">Đánh giá các hoạt động sinh hoạt hàng ngày (Chỉ số Barthel ADL)[cite: 1]</h6>
+                            <h6 class="fw-bold text-primary mb-2">Đánh giá hoạt động hàng ngày (Chỉ số Barthel ADL) [cite: 15]</h6>
                             <div class="row">
                                 <div class="col-md-4 mb-2">
-                                    <label class="form-label small fw-bold">Ăn uống[cite: 1]</label>
+                                    <label class="form-label small fw-bold">Ăn uống</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="b_eat" id="be0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="be0">0[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_eat" id="be5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="be5">5[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_eat" id="be10" value="10" onchange="calcBarthel()"><label class="btn small w-100" for="be10">10[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="b_eat" id="be0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="be0">0</label>
+                                        <input type="radio" class="btn-check" name="b_eat" id="be5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="be5">5</label>
+                                        <input type="radio" class="btn-check" name="b_eat" id="be10" value="10" onchange="calcBarthel()"><label class="btn small w-100" for="be10">10</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-2">
-                                    <label class="form-label small">Chải quần áo/tóc[cite: 1]</label>
+                                    <label class="form-label small">Chải quần áo/tóc</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="b_groom" id="bg0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="bg0">0[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_groom" id="bg5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="bg5">5[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="b_groom" id="bg0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="bg0">0</label>
+                                        <input type="radio" class="btn-check" name="b_groom" id="bg5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="bg5">5</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-2">
-                                    <label class="form-label small fw-bold">Đi vệ sinh[cite: 1]</label>
+                                    <label class="form-label small fw-bold">Đi vệ sinh</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="b_toilet" id="bt0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="bt0">0[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_toilet" id="bt5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="bt5">5[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_toilet" id="bt10" value="10" onchange="calcBarthel()"><label class="btn small w-100" for="bt10">10[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="b_toilet" id="bt0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="bt0">0</label>
+                                        <input type="radio" class="btn-check" name="b_toilet" id="bt5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="bt5">5</label>
+                                        <input type="radio" class="btn-check" name="b_toilet" id="bt10" value="10" onchange="calcBarthel()"><label class="btn small w-100" for="bt10">10</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-2">
-                                    <label class="form-label small">Di chuyển giường-ghế[cite: 1]</label>
+                                    <label class="form-label small">Di chuyển giường-ghế</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="b_trans" id="btr0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="btr0">0[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_trans" id="btr5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="btr5">5[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_trans" id="btr10" value="10" onchange="calcBarthel()"><label class="btn small w-100" for="btr10">10[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_trans" id="btr15" value="15" onchange="calcBarthel()"><label class="btn small w-100" for="btr15">15[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="b_trans" id="btr0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="btr0">0</label>
+                                        <input type="radio" class="btn-check" name="b_trans" id="btr5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="btr5">5</label>
+                                        <input type="radio" class="btn-check" name="b_trans" id="btr10" value="10" onchange="calcBarthel()"><label class="btn small w-100" for="btr10">10</label>
+                                        <input type="radio" class="btn-check" name="b_trans" id="btr15" value="15" onchange="calcBarthel()"><label class="btn small w-100" for="btr15">15</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-2">
-                                    <label class="form-label small">Đi lại trên mặt phẳng[cite: 1]</label>
+                                    <label class="form-label small">Đi lại trên mặt phẳng</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="b_walk" id="bw0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="bw0">0[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_walk" id="bw5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="bw5">5[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_walk" id="bw10" value="10" onchange="calcBarthel()"><label class="btn small w-100" for="bw10">10[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_walk" id="bw15" value="15" onchange="calcBarthel()"><label class="btn small w-100" for="bw15">15[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="b_walk" id="bw0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="bw0">0</label>
+                                        <input type="radio" class="btn-check" name="b_walk" id="bw5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="bw5">5</label>
+                                        <input type="radio" class="btn-check" name="b_walk" id="bw10" value="10" onchange="calcBarthel()"><label class="btn small w-100" for="bw10">10</label>
+                                        <input type="radio" class="btn-check" name="b_walk" id="bw15" value="15" onchange="calcBarthel()"><label class="btn small w-100" for="bw15">15</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-2">
-                                    <label class="form-label small">Tắm rửa độc lập[cite: 1]</label>
+                                    <label class="form-label small">Tắm rửa độc lập</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="b_bath" id="bba0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="bba0">0[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="b_bath" id="bba5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="bba5">5[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="b_bath" id="bba0" value="0" onchange="calcBarthel()"><label class="btn small w-100" for="bba0">0</label>
+                                        <input type="radio" class="btn-check" name="b_bath" id="bba5" value="5" onchange="calcBarthel()"><label class="btn small w-100" for="bba5">5</label>
                                     </div>
                                 </div>
                             </div>
@@ -298,14 +291,14 @@
 
                             <div class="row g-3 mt-3 border-top pt-3">
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold">Điểm Nhận Thức MoCA Nền (Thang 0-30)[cite: 1]</label>
+                                    <label class="form-label small fw-bold">Điểm Nhận Thức MoCA Nền (0-30) [cite: 15]</label>
                                     <input type="number" id="d13_moca" class="form-control" min="0" max="30">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold">Đánh giá Mê Sảng CAM lúc nhập viện[cite: 1]</label>
+                                    <label class="form-label small fw-bold">Đánh giá Mê Sảng CAM lúc nhập viện [cite: 15]</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="d15_cam" id="cam_0" value="0"><label class="btn w-100" for="cam_0">Âm tính (Không mê sảng)[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="d15_cam" id="cam_1" value="1"><label class="btn w-100" for="cam_1">Dương tính (Mê sảng)[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="d15_cam" id="cam_0" value="0"><label class="btn w-100" for="cam_0">Âm tính [cite: 15]</label>
+                                        <input type="radio" class="btn-check" name="d15_cam" id="cam_1" value="1"><label class="btn w-100" for="cam_1">Dương tính [cite: 15]</label>
                                     </div>
                                 </div>
                             </div>
@@ -313,34 +306,33 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: XÉT NGHIỆM NỀN & PHÂN NHÓM TIÊM VẮC-XIN -->
-                <div class="tab-pane fade" id="sec-p5-6" role="tabpanel">
+                <div class="tab-pane fade" id="sec-p5-6" role="tabpanel" aria-labelledby="tab-p5-6">
                     <div class="card">
-                        <div class="card-header text-primary">PHẦN V. XÉT NGHIỆM NỀN LÚC NHẬP VIỆN[cite: 1]</div>
+                        <div class="card-header text-primary">PHẦN V. XÉT NGHIỆM NỀN LÚC NHẬP VIỆN</div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-4">
-                                    <label class="form-label small fw-bold">Creatinine huyết thanh ($\mu$mol/L)[cite: 1]</label>
+                                    <label class="form-label small fw-bold">Creatinine huyết thanh ($\mu$mol/L) [cite: 15]</label>
                                     <input type="number" id="e04_creat" class="form-control" oninput="calcEGFR()">
                                 </div>
                                 <div class="col-md-8">
-                                    <label class="form-label small">Tính eGFR tự động (CKD-EPI 2021)[cite: 1]</label>
+                                    <label class="form-label small">Tính eGFR tự động (CKD-EPI 2021) [cite: 15]</label>
                                     <div class="p-2 border rounded bg-light fw-bold text-dark" id="egfr_result">Chưa có dữ liệu...</div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Hemoglobin (g/dL)[cite: 1]</label>
+                                    <label class="form-label small">Hemoglobin (g/dL) [cite: 15]</label>
                                     <input type="number" step="0.1" id="e01_hb" class="form-control">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Bạch cầu WBC (G/L)[cite: 1]</label>
+                                    <label class="form-label small">Bạch cầu WBC (G/L) [cite: 15]</label>
                                     <input type="number" step="0.1" id="e02_wbc" class="form-control">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Tiểu cầu PLT (G/L)[cite: 1]</label>
+                                    <label class="form-label small">Tiểu cầu PLT (G/L) [cite: 15]</label>
                                     <input type="number" id="e03_plt" class="form-control">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Albumin (g/dL)[cite: 1]</label>
+                                    <label class="form-label small">Albumin (g/dL) [cite: 15]</label>
                                     <input type="number" step="0.1" id="e08_alb" class="form-control">
                                 </div>
                             </div>
@@ -348,41 +340,41 @@
                     </div>
 
                     <div class="card border-info">
-                        <div class="card-header bg-info text-dark fw-bold">PHẦN VI. THÔNG TIN TIÊM VẮC-XIN TẠI GIƯỜNG TRƯỚC XUẤT VIỆN[cite: 1]</div>
+                        <div class="card-header bg-info text-dark fw-bold">PHẦN VI. THÔNG TIN TIÊM VẮC-XIN TẠI GIƯỜNG TRƯỚC XUẤT VIỆN</div>
                         <div class="card-body">
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Quyết định phân nhóm sau tư vấn[cite: 1]</label>
+                                    <label class="form-label fw-bold">Quyết định phân nhóm sau tư vấn [cite: 14]</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="c08_group" id="group_can_thiep" value="1" onchange="toggleVaccineSection()"><label class="btn w-100" for="group_can_thiep">Nhóm 1: Can Thiệp (Đồng ý tiêm)[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="c08_group" id="group_chung" value="2" onchange="toggleVaccineSection()"><label class="btn w-100" for="group_chung">Nhóm 2: Chứng nội tại (Từ chối)[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="c08_group" id="group_can_thiep" value="1" onchange="toggleVaccineSection()"><label class="btn w-100" for="group_can_thiep">Nhóm 1: Can Thiệp [cite: 14]</label>
+                                        <input type="radio" class="btn-check" name="c08_group" id="group_chung" value="2" onchange="toggleVaccineSection()"><label class="btn w-100" for="group_chung">Nhóm 2: Chứng nội tại [cite: 14]</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 d-none" id="div_refuse_reason">
-                                    <label class="form-label small fw-bold">Lý do bệnh nhân từ chối tiêm[cite: 1]</label>
-                                    <input type="text" id="c09_reason" class="form-control" placeholder="Ghi lý do...">
+                                    <label class="form-label small fw-bold">Lý do từ chối tiêm [cite: 14]</label>
+                                    <input type="text" id="c09_reason" class="form-control" placeholder="Ghi lý do từ chối... [cite: 14]">
                                 </div>
                             </div>
 
                             <div id="section_vaccine_fields" class="d-none border-top pt-3">
                                 <div class="row g-3">
                                     <div class="col-md-4">
-                                        <label class="form-label small">Loại vắc-xin chỉ định[cite: 1]</label>
+                                        <label class="form-label small">Loại vắc-xin được tiêm [cite: 15]</label>
                                         <select id="f01_vac_type" class="form-select">
                                             <option value="">-- Chọn loại vắc-xin --</option>
-                                            <option value="Influvac Tetra">Influvac Tetra (Abbott/Mylan)</option>
-                                            <option value="Vaxigrip Tetra">Vaxigrip Tetra (Sanofi Pasteur)</option>
+                                            <option value="Influvac Tetra">Influvac Tetra (Abbott/Mylan) [cite: 15]</option>
+                                            <option value="Vaxigrip Tetra">Vaxigrip Tetra (Sanofi Pasteur) [cite: 15]</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label small">Số lô sản xuất (Batch No.)[cite: 1]</label>
+                                        <label class="form-label small">Số lô sản xuất (Batch No.) [cite: 15]</label>
                                         <input type="text" id="f02_batch" class="form-control">
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label small">Vị trí tiêm bắp cơ Delta[cite: 1]</label>
+                                        <label class="form-label small">Vị trí tiêm bắp cơ Delta [cite: 15]</label>
                                         <div class="btn-group-toggle d-flex">
-                                            <input type="radio" class="btn-check" name="f05_site" id="site_l" value="Trái"><label class="btn small w-100" for="site_l">Tay Trái</label>
-                                            <input type="radio" class="btn-check" name="f05_site" id="site_r" value="Phải"><label class="btn small w-100" for="site_r">Tay Phải</label>
+                                            <input type="radio" class="btn-check" name="f05_site" id="site_l" value="Trái"><label class="btn small w-100" for="site_l">Tay Trái [cite: 15]</label>
+                                            <input type="radio" class="btn-check" name="f05_site" id="site_r" value="Phải"><label class="btn small w-100" for="site_r">Tay Phải [cite: 15]</label>
                                         </div>
                                     </div>
                                 </div>
@@ -391,39 +383,38 @@
                     </div>
                 </div>
 
-                <!-- TAB 4: THEO DÕI AN TOÀN 30 NGÀY SAU TIÊM -->
-                <div class="tab-pane fade" id="sec-p7" role="tabpanel">
+                <div class="tab-pane fade" id="sec-p7" role="tabpanel" aria-labelledby="tab-p7">
                     <div class="card">
-                        <div class="card-header text-primary">PHẦN VII. THEO DÕI AN TOÀN CÁC PHẢN ỨNG PHỤ THEO THỜI GIAN[cite: 1]</div>
+                        <div class="card-header text-primary">PHẦN VII. THEO DÕI AN TOÀN CÁC PHẢN ỨNG PHỤ THEO THỜI GIAN</div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered text-center align-middle small">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Triệu chứng phản ứng phụ</th>
-                                            <th>Giờ 0 (Tại giường)[cite: 1]</th>
-                                            <th>Ngày 1[cite: 1]</th>
-                                            <th>Ngày 3[cite: 1]</th>
-                                            <th>Ngày 7[cite: 1]</th>
+                                            <th>Triệu chứng phản ứng phụ [cite: 16]</th>
+                                            <th>Giờ 0 [cite: 16]</th>
+                                            <th>Ngày 1 [cite: 16]</th>
+                                            <th>Ngày 3 [cite: 16]</th>
+                                            <th>Ngày 7 [cite: 16]</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="text-start fw-bold">Đau tại chỗ tiêm (Thang điểm VAS 0-10)[cite: 1]</td>
+                                            <td class="text-start fw-bold">Đau tại chỗ tiêm (Thang điểm VAS 0-10) [cite: 16]</td>
                                             <td><input type="number" id="g01_h0" class="form-control form-control-sm text-center" min="0" max="10"></td>
                                             <td><input type="number" id="g01_d1" class="form-control form-control-sm text-center" min="0" max="10"></td>
                                             <td><input type="number" id="g01_d3" class="form-control form-control-sm text-center" min="0" max="10"></td>
                                             <td><input type="number" id="g01_d7" class="form-control form-control-sm text-center" min="0" max="10"></td>
                                         </tr>
                                         <tr>
-                                            <td class="text-start fw-bold">Sưng / Ban đỏ vùng tiêm (Độ rộng mm)[cite: 1]</td>
+                                            <td class="text-start fw-bold">Sưng / Ban đỏ vùng tiêm (Độ rộng mm) [cite: 16]</td>
                                             <td><input type="number" id="g02_h0" class="form-control form-control-sm text-center"></td>
                                             <td><input type="number" id="g02_d1" class="form-control form-control-sm text-center"></td>
                                             <td><input type="number" id="g02_d3" class="form-control form-control-sm text-center"></td>
                                             <td><input type="number" id="g02_d7" class="form-control form-control-sm text-center"></td>
                                         </tr>
                                         <tr>
-                                            <td class="text-start fw-bold">Sốt - Theo dõi nhiệt độ nách (°C)[cite: 1]</td>
+                                            <td class="text-start fw-bold">Sốt - Theo dõi nhiệt độ nách (°C) [cite: 16]</td>
                                             <td><input type="number" step="0.1" id="g07_h0" class="form-control form-control-sm text-center"></td>
                                             <td><input type="number" step="0.1" id="g07_d1" class="form-control form-control-sm text-center"></td>
                                             <td><input type="number" step="0.1" id="g07_d3" class="form-control form-control-sm text-center"></td>
@@ -435,17 +426,17 @@
 
                             <div class="row g-3 border-top pt-3 mt-2 text-danger fw-bold">
                                 <div class="col-md-6">
-                                    <label class="form-label small">Ghi nhận Biến cố phản vệ (60 phút)[cite: 1]</label>
+                                    <label class="form-label small">Biến cố phản vệ (60 phút) [cite: 16]</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="g14_anaph" id="anaph_0" value="0"><label class="btn w-100" for="anaph_0">Không có[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="g14_anaph" id="anaph_1" value="1"><label class="btn w-100" for="anaph_1">Có phản vệ[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="g14_anaph" id="anaph_0" value="0"><label class="btn w-100" for="anaph_0">Không có [cite: 16]</label>
+                                        <input type="radio" class="btn-check" name="g14_anaph" id="anaph_1" value="1"><label class="btn w-100" for="anaph_1">Có [cite: 16]</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small">Ghi nhận Biến cố bất lợi nghiêm trọng SAE (30 ngày)[cite: 1]</label>
+                                    <label class="form-label small">Biến cố bất lợi nghiêm trọng SAE (30 ngày) [cite: 16]</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="g16_sae" id="sae_0" value="0"><label class="btn w-100" for="sae_0">Không có[cite: 1]</label>
-                                        <input type="radio" class="btn-check" name="g16_sae" id="sae_1" value="1"><label class="btn w-100" for="sae_1">Có SAE[cite: 1]</label>
+                                        <input type="radio" class="btn-check" name="g16_sae" id="sae_0" value="0"><label class="btn w-100" for="sae_0">Không có [cite: 16]</label>
+                                        <input type="radio" class="btn-check" name="g16_sae" id="sae_1" value="1"><label class="btn w-100" for="sae_1">Có SAE [cite: 16]</label>
                                     </div>
                                 </div>
                             </div>
@@ -453,76 +444,73 @@
                     </div>
                 </div>
 
-                <!-- TAB 5: THEO DÕI HÀNG THÁNG DỌC (T1 ĐẾN T12) -->
-                <div class="tab-pane fade" id="sec-p8" role="tabpanel">
+                <div class="tab-pane fade" id="sec-p8" role="tabpanel" aria-labelledby="tab-p8">
                     <div class="card">
-                        <div class="card-header text-primary">PHẦN VIII. THEO DÕI BIẾN CỐ LÂM SÀNG DỌC HÀNG THÁNG QUA ĐIỆN THOẠI[cite: 1]</div>
+                        <div class="card-header text-primary">PHẦN VIII. THEO DÕI BIẾN CỐ LÂM SÀNG DỌC HÀNG THÁNG QUA ĐIỆN THOẠI</div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered text-center align-middle small">
                                     <thead class="table-dark">
                                         <tr>
-                                            <th>Mốc thời gian dọc</th>
-                                            <th>Hội chứng cúm (ILI)[cite: 1]</th>
-                                            <th>Viêm phổi cộng đồng[cite: 1]</th>
-                                            <th>Tái nhập viện (Hô hấp)[cite: 1]</th>
-                                            <th>Biến cố té ngã (Số lần)[cite: 1]</th>
-                                            <th>Đột quỵ mới mắc[cite: 1]</th>
+                                            <th>Mốc tháng [cite: 17]</th>
+                                            <th>Hội chứng cúm (ILI) [cite: 17]</th>
+                                            <th>Viêm phổi cộng đồng [cite: 17]</th>
+                                            <th>Tái nhập viện (Hô hấp) [cite: 17]</th>
+                                            <th>Té ngã (Số lần) [cite: 17]</th>
+                                            <th>Đột quỵ mới mắc [cite: 17]</th>
                                         </tr>
                                     </thead>
                                     <tbody id="longitudinal_tbody">
-                                        <!-- Render động tất cả các mốc tháng: T1, T2, T3, T6, T9, T12 -->
-                                    </tbody>
+                                        </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- TAB 6: TÁI KHÁM ĐÁNH GIÁ LẠI T6 & T12 -->
-                <div class="tab-pane fade" id="sec-p9" role="tabpanel">
+                <div class="tab-pane fade" id="sec-p9" role="tabpanel" aria-labelledby="tab-p9">
                     <div class="card border-success">
-                        <div class="card-header bg-success text-white">PHẦN IX. LẶP LẠI ĐÁNH GIÁ LÃO KHOA TOÀN DIỆN KHI TÁI KHÁM TRỰC TIẾP[cite: 1]</div>
+                        <div class="card-header bg-success text-white">PHẦN IX. LẶP LẠI ĐÁNH GIÁ LÃO KHOA TOÀN DIỆN KHI TÁI KHÁM TRỰC TIẾP</div>
                         <div class="card-body">
                             <div class="row g-4">
                                 <div class="col-md-6 border-end">
-                                    <h5 class="fw-bold text-success">Mốc Đánh Giá 6 Tháng (T6)[cite: 1]</h5>
+                                    <h5 class="fw-bold text-success">Mốc Đánh Giá 6 Tháng (T6) [cite: 18]</h5>
                                     <div class="mb-3">
-                                        <label class="form-label small">Tổng điểm Nhận thức MoCA T6[cite: 1]</label>
+                                        <label class="form-label small">Tổng điểm Nhận thức MoCA T6 [cite: 18]</label>
                                         <input type="number" id="i01_moca_t6" class="form-control" min="0" max="30">
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label small">Thang điểm dễ tổn thương CFS T6[cite: 1]</label>
+                                        <label class="form-label small">Thang điểm dễ tổn thương CFS T6 [cite: 18]</label>
                                         <input type="number" id="i03_cfs_t6" class="form-control" min="1" max="9">
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label small">Tổng điểm sinh hoạt Barthel T6[cite: 1]</label>
+                                        <label class="form-label small">Tổng điểm sinh hoạt Barthel T6 [cite: 18]</label>
                                         <input type="number" id="i04_bar_t6" class="form-control" min="0" max="100">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <h5 class="fw-bold text-success">Mốc Đánh Giá 12 Tháng (T12)[cite: 1]</h5>
+                                    <h5 class="fw-bold text-success">Mốc Đánh Giá 12 Tháng (T12) [cite: 18]</h5>
                                     <div class="mb-3">
-                                        <label class="form-label small">Tổng điểm Nhận thức MoCA T12[cite: 1]</label>
+                                        <label class="form-label small">Tổng điểm Nhận thức MoCA T12 [cite: 18]</label>
                                         <input type="number" id="i08_moca_t12" class="form-control" min="0" max="30">
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label small">Thang điểm dễ tổn thương CFS T12[cite: 1]</label>
+                                        <label class="form-label small">Thang điểm dễ tổn thương CFS T12 [cite: 18]</label>
                                         <input type="number" id="i10_cfs_t12" class="form-control" min="1" max="9">
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label small">Tổng điểm sinh hoạt Barthel T12[cite: 1]</label>
+                                        <label class="form-label small">Tổng điểm sinh hoạt Barthel T12 [cite: 18]</label>
                                         <input type="number" id="i11_bar_t12" class="form-control" min="0" max="100">
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-3 border-top pt-3">
-                                <label class="form-label fw-bold">Trạng thái kết thúc theo dõi nghiên cứu dọc[cite: 1]</label>
+                                <label class="form-label fw-bold">Trạng thái kết thúc theo dõi nghiên cứu dọc [cite: 18]</label>
                                 <select id="i15_status" class="form-select border-primary fw-bold text-primary">
-                                    <option value="1">1. Hoàn thành đầy đủ 12 tháng theo dõi dọc[cite: 1]</option>
-                                    <option value="2">2. Tử vong trong kỳ theo dõi dọc[cite: 1]</option>
-                                    <option value="3">3. Tự rút đồng thuận tham gia nghiên cứu[cite: 1]</option>
-                                    <option value="4">4. Mất dấu liên lạc hoàn toàn[cite: 1]</option>
+                                    <option value="1">1. Hoàn thành đầy đủ 12 tháng theo dõi dọc [cite: 18]</option>
+                                    <option value="2">2. Tử vong trong kỳ theo dõi dọc [cite: 18]</option>
+                                    <option value="3">3. Tự rút đồng thuận tham gia nghiên cứu [cite: 18]</option>
+                                    <option value="4">4. Mất dấu liên lạc hoàn toàn [cite: 18]</option>
                                 </select>
                             </div>
                         </div>
@@ -535,12 +523,12 @@
 </div>
 
 <script>
-    // Khởi tạo Database chạy ngầm lưu trữ cục bộ LocalStorage bảo mật tại máy
     let geriatric_db = JSON.parse(localStorage.getItem('geriatric_crf_db')) || {};
     let activePatientId = null;
+    let globalAge = null;
     const months = ['T1', 'T2', 'T3', 'T6', 'T9', 'T12'];
 
-    // Tự động sinh giao diện bảng theo dõi biến cố hàng tháng dọc
+    // Render động bảng Phần VIII khi tải trang
     window.onload = function() {
         const tbody = document.getElementById('longitudinal_tbody');
         months.forEach(m => {
@@ -557,7 +545,6 @@
         renderPatientList();
     };
 
-    // Hàm thêm mới bệnh nhân
     function createNewPatient() {
         activePatientId = null;
         document.getElementById('editing_label').innerText = "BN MỚI";
@@ -596,7 +583,6 @@
         toggleVaccineSection();
     }
 
-    // Tự động tính tuổi và chạy điều kiện sàng lọc đầu vào
     function calculateAge() {
         const dobInput = document.getElementById('a02_dob').value;
         const ageLabel = document.getElementById('lbl_age_check');
@@ -615,7 +601,6 @@
         runScreeningLogic();
     }
 
-    // Logic kiểm soát điều kiện loại trừ tự động theo dữ liệu thực tế
     function runScreeningLogic() {
         const dobInput = document.getElementById('a02_dob').value;
         const stayEl = document.querySelector('input[name="c02_stay"]:checked');
@@ -647,13 +632,6 @@
         }
     }
 
-    // Gắn sự kiện lắng nghe đổi màu trạng thái cho toàn bộ khối sàng lọc
-    document.querySelectorAll('input[name="c02_stay"], input[name="c06_icf"], input[name="d09_cfs"]').forEach(el => {
-        el.addEventListener('change', runScreeningLogic);
-    });
-    for(let i=1; i<=8; i++) { document.getElementById(`exc_${i}`).addEventListener('change', runScreeningLogic); }
-
-    // Tự động tính chỉ số khối cơ thể BMI
     function calculateBMI() {
         const h = parseFloat(document.getElementById('d01_height').value) / 100;
         const w = parseFloat(document.getElementById('d02_weight').value);
@@ -668,7 +646,6 @@
         }
     }
 
-    // Tự động tính toán tổng điểm số Barthel ADL
     function calcBarthel() {
         const items = ['b_eat', 'b_groom', 'b_toilet', 'b_trans', 'b_walk', 'b_bath'];
         let total = 0, filled = 0;
@@ -686,7 +663,6 @@
         }
     }
 
-    // Tự động tính toán eGFR theo CKD-EPI 2021
     function calcEGFR() {
         const creat = parseFloat(document.getElementById('e04_creat').value);
         const gender = document.querySelector('input[name="a01_gender"]:checked');
@@ -703,7 +679,6 @@
         const age = Math.abs(new Date(Date.now() - dob.getTime()).getUTCFullYear() - 1970);
         const isFemale = gender.value === "1";
         
-        // Cấu trúc lõi thuật toán CKD-EPI 2021 giản lược chuẩn hóa lâm sàng
         let kappa = isFemale ? 61.9 : 79.6;
         let alpha = isFemale ? -0.241 : -0.302;
         let egfr = 142 * Math.pow(Math.min(creat/kappa, 1), alpha) * Math.pow(Math.max(creat/kappa, 1), -1.200) * Math.pow(0.9938, age);
@@ -713,7 +688,6 @@
         display.className = "p-2 border rounded bg-success text-white fw-bold";
     }
 
-    // Đóng mở phân vùng thông tin tiêm chủng theo phân nhóm tư vấn
     function toggleVaccineSection() {
         const gr = document.querySelector('input[name="c08_group"]:checked');
         const vacDiv = document.getElementById('section_vaccine_fields');
@@ -727,13 +701,11 @@
         }
     }
 
-    // LƯU CƠ SỞ DỮ LIỆU BỆNH NHÂN THEO TRỤC DỌC (LƯU LOCALSTORAGE)
     function saveCurrentPatient() {
         const id = document.getElementById('patient_id').value.trim().toUpperCase();
-        if (!id) { alert("Lỗi: Yêu cầu bắt buộc phải nhập Mã Bệnh Nhân để quản lý CSDL dọc!"); return; }
+        if (!id) { alert("Lỗi: Yêu cầu bắt buộc phải nhập Mã Bệnh Nhân!"); return; }
         
         const gender = document.querySelector('input[name="a01_gender"]:checked');
-        const eco = document.querySelector('input[name="b06_eco"]:checked');
         const stay = document.querySelector('input[name="c02_stay"]:checked');
         const icf = document.querySelector('input[name="c06_icf"]:checked');
         const cfs = document.querySelector('input[name="d09_cfs"]:checked');
@@ -742,41 +714,21 @@
         const anaph = document.querySelector('input[name="g14_anaph"]:checked');
         const sae = document.querySelector('input[name="g16_sae"]:checked');
 
-        // Tạo cấu trúc dữ liệu phẳng đồng bộ cho bản ghi
         let record = {
-            Ma_BN: id,
-            NCV: document.getElementById('researcher_name').value,
-            Ho_Ten: document.getElementById('a00_name').value,
-            Gioi_Tinh: gender ? gender.value : "",
-            Ngay_Sinh: document.getElementById('a02_dob').value,
-            Khoa_Dieu_Tri: document.getElementById('a06_dept').value,
-            Ngay_Nhap_Vien: document.getElementById('a07_dov').value,
-            Kinh_Te: eco ? eco.value : "",
-            C02_Stay: stay ? stay.value : "",
-            C06_ICF: icf ? icf.value : "",
-            T0_CFS: cfs ? cfs.value : "",
-            T0_MoCA: document.getElementById('d13_moca').value,
-            T0_Height: document.getElementById('d01_height').value,
-            T0_Weight: document.getElementById('d02_weight').value,
-            T0_Creatinine: document.getElementById('e04_creat').value,
-            Phan_Nhom: gr ? gr.value : "",
-            Ly_Do_Tu_Choi: document.getElementById('c09_reason').value,
-            Vac_Type: document.getElementById('f01_vac_type').value,
-            Vac_Batch: document.getElementById('f02_batch').value,
-            Vac_Site: site ? site.value : "",
-            SAE_Phan_Ve: anaph ? anaph.value : "",
-            SAE_30_Ngay: sae ? sae.value : "",
-            // Đọc trạng thái lặp lại CGA mốc T6 & T12
-            T6_MoCA: document.getElementById('i01_moca_t6').value,
-            T6_CFS: document.getElementById('i03_cfs_t6').value,
-            T6_Barthel: document.getElementById('i04_bar_t6').value,
-            T12_MoCA: document.getElementById('i08_moca_t12').value,
-            T12_CFS: document.getElementById('i10_cfs_t12').value,
-            T12_Barthel: document.getElementById('i11_bar_t12').value,
+            Ma_BN: id, NCV: document.getElementById('researcher_name').value, Ho_Ten: document.getElementById('a00_name').value,
+            Gioi_Tinh: gender ? gender.value : "", Ngay_Sinh: document.getElementById('a02_dob').value,
+            Khoa_Dieu_Tri: document.getElementById('a06_dept').value, Ngay_Nhap_Vien: document.getElementById('a07_dov').value,
+            C02_Stay: stay ? stay.value : "", C06_ICF: icf ? icf.value : "", T0_CFS: cfs ? cfs.value : "",
+            T0_MoCA: document.getElementById('d13_moca').value, T0_Height: document.getElementById('d01_height').value,
+            T0_Weight: document.getElementById('d02_weight').value, T0_Creatinine: document.getElementById('e04_creat').value,
+            Phan_Nhom: gr ? gr.value : "", Ly_Do_Tu_Choi: document.getElementById('c09_reason').value,
+            Vac_Type: document.getElementById('f01_vac_type').value, Vac_Batch: document.getElementById('f02_batch').value,
+            Vac_Site: site ? site.value : "", SAE_Phan_Ve: anaph ? anaph.value : "", SAE_30_Ngay: sae ? sae.value : "",
+            T6_MoCA: document.getElementById('i01_moca_t6').value, T6_CFS: document.getElementById('i03_cfs_t6').value, T6_Barthel: document.getElementById('i04_bar_t6').value,
+            T12_MoCA: document.getElementById('i08_moca_t12').value, T12_CFS: document.getElementById('i10_cfs_t12').value, T12_Barthel: document.getElementById('i11_bar_t12').value,
             Trang_Thai_Cuoi: document.getElementById('i15_status').value
         };
 
-        // Thu thập vòng lặp dữ liệu dọc hàng tháng
         months.forEach(m => {
             record[`ILI_${m}`] = document.getElementById(`ili_${m}`).checked ? 1 : 0;
             record[`Pneumonia_${m}`] = document.getElementById(`pne_${m}`).checked ? 1 : 0;
@@ -785,7 +737,6 @@
             record[`Stroke_${m}`] = document.getElementById(`stroke_${m}`).checked ? 1 : 0;
         });
 
-        // Đọc dữ liệu bảng theo dõi an toàn phản ứng tại chỗ
         ['h0', 'd1', 'd3', 'd7'].forEach(time => {
             record[`VAS_Pain_${time}`] = document.getElementById(`g01_${time}`).value;
             record[`Swelling_${time}`] = document.getElementById(`g02_${time}`).value;
@@ -794,19 +745,18 @@
 
         geriatric_db[id] = record;
         localStorage.setItem('geriatric_crf_db', JSON.stringify(geriatric_db));
-        alert(`Đã lưu cập nhật thành công hồ sơ dọc cho bệnh nhân: ${id}`);
+        alert(`Đã lưu hồ sơ bệnh nhân: ${id}`);
         activePatientId = id;
         document.getElementById('editing_label').innerText = id;
         renderPatientList();
     }
 
-    // Tìm kiếm phần tử và tải lại thông tin dọc của bệnh nhân cũ
     function loadPatientRecord(id) {
         activePatientId = id;
         const p = geriatric_db[id];
         document.getElementById('editing_label').innerText = p.Ma_BN;
         document.getElementById('patient_id').value = p.Ma_BN;
-        document.getElementById('patient_id').disabled = true; // Khóa trường khóa định danh
+        document.getElementById('patient_id').disabled = true;
         
         document.getElementById('researcher_name').value = p.NCV || "";
         document.getElementById('a00_name').value = p.Ho_Ten || "";
@@ -821,9 +771,7 @@
         document.getElementById('f01_vac_type').value = p.Vac_Type || "";
         document.getElementById('f02_batch').value = p.Vac_Batch || "";
         
-        // Tải lại trạng thái các nút Radio chọn lựa
         if(p.Gioi_Tinh) document.getElementById(`a01_g${p.Gioi_Tinh}`).checked = true;
-        if(p.Kinh_Te) document.getElementById(`b06_e${p.Kinh_Te}`).checked = true;
         if(p.C02_Stay) document.getElementById(`c02_${p.C02_Stay}`).checked = true;
         if(p.C06_ICF) document.getElementById(`c06_${p.C06_ICF}`).checked = true;
         if(p.T0_CFS) document.getElementById(`cfs_${p.T0_CFS}`).checked = true;
@@ -832,7 +780,6 @@
         if(p.SAE_Phan_Ve) document.getElementById(p.SAE_Phan_Ve === "1" ? "anaph_1" : "anaph_0").checked = true;
         if(p.SAE_30_Ngay) document.getElementById(p.SAE_30_Ngay === "1" ? "sae_1" : "sae_0").checked = true;
 
-        // Tải dữ liệu các mốc re-CGA T6 & T12
         document.getElementById('i01_moca_t6').value = p.T6_MoCA || "";
         document.getElementById('i03_cfs_t6').value = p.T6_CFS || "";
         document.getElementById('i04_bar_t6').value = p.T6_Barthel || "";
@@ -841,7 +788,6 @@
         document.getElementById('i11_bar_t12').value = p.T12_Barthel || "";
         document.getElementById('i15_status').value = p.Trang_Thai_Cuoi || "1";
 
-        // Tải lại dữ liệu bảng biến cố hàng tháng dọc
         months.forEach(m => {
             document.getElementById(`ili_${m}`).checked = p[`ILI_${m}`] === 1;
             document.getElementById(`pne_${m}`).checked = p[`Pneumonia_${m}`] === 1;
@@ -850,7 +796,6 @@
             document.getElementById(`stroke_${m}`).checked = p[`Stroke_${m}`] === 1;
         });
 
-        // Tải dữ liệu an toàn phản ứng tại chỗ
         ['h0', 'd1', 'd3', 'd7'].forEach(time => {
             document.getElementById(`g01_${time}`).value = p[`VAS_Pain_${time}`] || "";
             document.getElementById(`g02_${time}`).value = p[`Swelling_${time}`] || "";
@@ -864,7 +809,6 @@
         toggleVaccineSection();
     }
 
-    // Hiển thị danh sách bệnh nhân lên bảng điều khiển trái
     function renderPatientList() {
         const group = document.getElementById('patient_list_group');
         group.innerHTML = "";
@@ -881,7 +825,6 @@
         });
     }
 
-    // Bộ lọc tìm kiếm nhanh mã bệnh nhân
     function filterPatients() {
         const val = document.getElementById('search_id').value.toUpperCase();
         const btns = document.getElementById('patient_list_group').getElementsByTagName('button');
@@ -891,14 +834,12 @@
         }
     }
 
-    // KẾT XUẤT TOÀN BỘ CƠ SỞ DỮ LIỆU ĐA CỘT PHẲNG RA EXCEL (.XLSX) CHUẨN SPSS/R/STATA
     function exportAllToExcel() {
         const rawRecords = Object.values(geriatric_db);
-        if (rawRecords.length === 0) { alert("Lỗi: Cơ sở dữ liệu hiện tại chưa có thông tin bệnh nhân nào!"); return; }
-        
+        if (rawRecords.length === 0) { alert("Lỗi: Chưa có thông tin bệnh nhân nào!"); return; }
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.json_to_sheet(rawRecords);
-        XLSX.utils.book_append_sheet(wb, ws, "Database_CRF_Doc_Flat");
+        XLSX.utils.book_append_sheet(wb, ws, "Database_CRF_Flat");
         XLSX.writeFile(wb, "CSDL_NghienCuu_TiemChung_LaoKhoa.xlsx");
     }
 </script>
