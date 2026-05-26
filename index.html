@@ -13,7 +13,7 @@
         .card { border: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .card-header { background-color: #fff; border-bottom: 2px solid #f1f3f5; font-weight: bold; color: #1e3a8a; }
         
-        /* Luật trực quan màu sắc: Chưa chọn = Xám nhạt, Đã chọn = Xanh dương chủ đạo */
+        /* Luật trực quan màu sắc theo yêu cầu: Chưa chọn = Xám nhạt, Đã chọn = Đổi màu xanh dương */
         .btn-group-toggle .btn {
             background-color: #e9ecef; color: #495057; border: 1px solid #ced4da;
             transition: all 0.15s ease; margin-right: 4px; margin-bottom: 4px; border-radius: 6px !important;
@@ -21,10 +21,6 @@
         .btn-group-toggle input[type="radio"]:checked + .btn {
             background-color: #0d6efd !important; color: #fff !important; border-color: #0d6efd !important;
             font-weight: bold; box-shadow: 0 3px 6px rgba(13,110,253,0.2);
-        }
-        .btn-group-toggle input[type="checkbox"]:checked + .btn {
-            background-color: #0d6efd !important; color: #fff !important; border-color: #0d6efd !important;
-            font-weight: bold;
         }
         
         .checkbox-box {
@@ -38,7 +34,7 @@
         .score-display { background-color: #00a65a; color: #fff; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; margin-top: 10px; }
         .score-cci { background-color: #00c0ef; color: #fff; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; margin-top: 10px; }
         
-        /* FIX LỖI ĐIỀU HƯỚNG: Tối ưu cấu trúc cây Pills Tab */
+        /* ĐỊNH DẠNG THANH MENU ĐIỀU HƯỚNG TRỤC DỌC - SỬA LỖI CHUYỂN TAB */
         .nav-pills .nav-link { color: #495057; background-color: #fff; margin-bottom: 8px; border-radius: 6px; text-align: left; width: 100%; border: 1px solid #dee2e6; }
         .nav-pills .nav-link:hover { background-color: #f1f3f5; }
         .nav-pills .nav-link.active { background-color: #1e3a8a; color: #fff; font-weight: bold; border-color: #1e3a8a; }
@@ -96,12 +92,12 @@
                 <div class="card-header text-primary fw-bold"><i class="fa-solid fa-timeline me-2"></i>Trục Theo Dõi Dọc</div>
                 <div class="card-body p-2">
                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <button class="nav-link active" id="tab-p1-2-3" data-bs-toggle="pill" data-bs-target="#sec-p1-2-3" type="button" role="tab" aria-controls="sec-p1-2-3" aria-selected="true"><i class="fa-solid fa-file-medical me-2"></i>Phần I-III: Sàng lọc & Nhóm</button>
-                        <button class="nav-link" id="tab-p4" data-bs-toggle="pill" data-bs-target="#sec-p4" type="button" role="tab" aria-controls="sec-p4" aria-selected="false"><i class="fa-solid fa-heart-pulse me-2"></i>Phần IV: Đánh giá Nền (T0)</button>
-                        <button class="nav-link" id="tab-p5-6" data-bs-toggle="pill" data-bs-target="#sec-p5-6" type="button" role="tab" aria-controls="sec-p5-6" aria-selected="false"><i class="fa-solid fa-syringe me-2"></i>Phần V-VI: Xét nghiệm & Tiêm</button>
-                        <button class="nav-link" id="tab-p7" data-bs-toggle="pill" data-bs-target="#sec-p7" type="button" role="tab" aria-controls="sec-p7" aria-selected="false"><i class="fa-solid fa-shield-virus me-2"></i>Phần VII: An toàn 7 ngày</button>
-                        <button class="nav-link" id="tab-p8" data-bs-toggle="pill" data-bs-target="#sec-p8" type="button" role="tab" aria-controls="sec-p8" aria-selected="false"><i class="fa-solid fa-phone-volume me-2"></i>Phần VIII: Theo dõi T1-T12</button>
-                        <button class="nav-link" id="tab-p9" data-bs-toggle="pill" data-bs-target="#sec-p9" type="button" role="tab" aria-controls="sec-p9" aria-selected="false"><i class="fa-solid fa-hospital-user me-2"></i>Phần IX: Tái khám T6 & T12</button>
+                        <button class="nav-link active" id="tab-p1-2-3" data-bs-toggle="tab" data-bs-target="#sec-p1-2-3" type="button" role="tab" aria-controls="sec-p1-2-3" aria-selected="true"><i class="fa-solid fa-file-medical me-2"></i>Phần I-III: Sàng lọc & Nhóm</button>
+                        <button class="nav-link" id="tab-p4" data-bs-toggle="tab" data-bs-target="#sec-p4" type="button" role="tab" aria-controls="sec-p4" aria-selected="false"><i class="fa-solid fa-heart-pulse me-2"></i>Phần IV: Đánh giá Nền (T0)</button>
+                        <button class="nav-link" id="tab-p5-6" data-bs-toggle="tab" data-bs-target="#sec-p5-6" type="button" role="tab" aria-controls="sec-p5-6" aria-selected="false"><i class="fa-solid fa-syringe me-2"></i>Phần V: Xét nghiệm & Tiêm</button>
+                        <button class="nav-link" id="tab-p7" data-bs-toggle="tab" data-bs-target="#sec-p7" type="button" role="tab" aria-controls="sec-p7" aria-selected="false"><i class="fa-solid fa-shield-virus me-2"></i>Phần VII: An toàn 7 ngày</button>
+                        <button class="nav-link" id="tab-p8" data-bs-toggle="tab" data-bs-target="#sec-p8" type="button" role="tab" aria-controls="sec-p8" aria-selected="false"><i class="fa-solid fa-phone-volume me-2"></i>Phần VIII: Theo dõi T1-T12</button>
+                        <button class="nav-link" id="tab-p9" data-bs-toggle="tab" data-bs-target="#sec-p9" type="button" role="tab" aria-controls="sec-p9" aria-selected="false"><i class="fa-solid fa-hospital-user me-2"></i>Phần IX: Tái khám T6 & T12</button>
                     </div>
                     <div class="p-2 mt-3 bg-light rounded text-center border">
                         <small class="text-muted d-block">Mã hồ sơ đang mở:</small>
@@ -127,8 +123,8 @@
                                 <div class="col-md-4">
                                     <label class="form-label small">Giới tính</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="a01_gender" id="a01_g0" value="0" onchange="calcEGFR()"><label class="btn w-100" for="a01_g0">Nam</label>
-                                        <input type="radio" class="btn-check" name="a01_gender" id="a01_g1" value="1" onchange="calcEGFR()"><label class="btn w-100" for="a01_g1">Nữ</label>
+                                        <input type="radio" class="btn-check" name="a01_gender" id="a01_g0" value="0" onchange="calcEGFR(); calcEGFRPre();"><label class="btn w-100" for="a01_g0">Nam</label>
+                                        <input type="radio" class="btn-check" name="a01_gender" id="a01_g1" value="1" onchange="calcEGFR(); calcEGFRPre();"><label class="btn w-100" for="a01_g1">Nữ</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -204,7 +200,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label small">Khoa nội trú điều trị</label>
-                                    <input type="text" id="a06_dept" class="form-control" placeholder="Ví dụ: Khoa Thần kinh">
+                                    <input type="text" id="a06_dept" class="form-control" placeholder="Ví dụ: Khoa Tim mạch">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small">Ngày nhập viện</label>
@@ -212,7 +208,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small">Số hồ sơ bệnh án (BA số)</label>
-                                    <input type="text" id="a05_ba_num" class="form-control" placeholder="Trích xuất phần mềm HIS">
+                                    <input type="text" id="a05_ba_num" class="form-control" placeholder="Mã số lưu trữ">
                                 </div>
                             </div>
                         </div>
@@ -365,44 +361,44 @@
                         <div class="card-header bg-primary text-white">3. KHUNG CHI TIẾT ĐỊNH NGHĨA CHẤM ĐIỂM MoCA NỀN TOÀN DIỆN (0-30 điểm)</div>
                         <div class="card-body">
                             <div class="row g-3">
-                                <div class="col-md-6 bg-card-section p-3 rounded border">
+                                <div class="col-md-6 bg-light p-3 rounded border">
                                     <label class="form-label small fw-bold text-primary">1. Thị không gian / Điều hành (Tối đa 5đ)</label>
                                     <input type="number" id="moca_sub_exec" class="form-control form-control-sm moca-sub" min="0" max="5" value="0" oninput="calcMoCATotal()">
-                                    <span class="moca-guide"><b>Quy tắc chấm:</b> Vẽ đường nối số-chữ xen kẽ đúng (1đ). Vẽ hình khối lập phương có đủ tính phối cảnh không gian (1đ). Vẽ đồng hồ: Đủ vòng tròn (1đ), đủ 12 số đặt đúng vị trí (1đ), kim chỉ đúng 11 giờ 10 phút (1đ).</span>
+                                    <span class="moca-guide">Vẽ đường nối số-chữ xen kẽ đúng (1đ). Vẽ hình khối lập phương có đủ tính phối cảnh không gian (1đ). Vẽ đồng hồ: Đủ vòng tròn (1đ), đủ 12 số đặt đúng vị trí (1đ), kim chỉ đúng 11 giờ 10 phút (1đ).</span>
                                 </div>
-                                <div class="col-md-6 bg-card-section p-3 rounded border">
+                                <div class="col-md-6 bg-light p-3 rounded border">
                                     <label class="form-label small fw-bold text-primary">2. Định danh động vật (Tối đa 3đ)</label>
                                     <input type="number" id="moca_sub_name" class="form-control form-control-sm moca-sub" min="0" max="3" value="0" oninput="calcMoCATotal()">
-                                    <span class="moca-guide"><b>Quy tắc chấm:</b> Gọi đúng tên từng con vật trong hình mẫu phiên bản Việt Nam: Sư tử (1đ), Tê giác (1đ), Lạc đà (1đ). Trả lời sai hoặc không biết chấm 0đ cho hình đó.</span>
+                                    <span class="moca-guide">Gọi đúng tên từng con vật trong hình mẫu: Sư tử (1đ), Tê giác (1đ), Lạc đà (1đ).</span>
                                 </div>
-                                <div class="col-md-6 bg-card-section p-3 rounded border">
+                                <div class="col-md-6 bg-light p-3 rounded border">
                                     <label class="form-label small fw-bold text-primary">3. Chú ý và tập trung (Tối đa 6đ)</label>
                                     <input type="number" id="moca_sub_attn" class="form-control form-control-sm moca-sub" min="0" max="6" value="0" oninput="calcMoCATotal()">
-                                    <span class="moca-guide"><b>Quy tắc chấm:</b> Nhắc lại đúng dãy 5 số xuôi (1đ). Nhắc lại đúng dãy 3 số ngược (1đ). Đọc danh sách chữ cái, gõ tay đúng khi nghe chữ A (Mắc ≤1 lỗi: 1đ, lỗi ≥2: 0đ). Thực hiện phép tính trừ liên tiếp 100 cho 7: Đúng 4-5 lần trừ (3đ), đúng 2-3 lần (2đ), đúng 1 lần (1đ).</span>
+                                    <span class="moca-guide">Nhắc lại đúng dãy 5 số xuôi (1đ). Nhắc lại đúng dãy 3 số ngược (1đ). Gõ tay đúng khi nghe chữ A (Mắc ≤1 lỗi: 1đ). Trừ liên tiếp 7 từ 100: Đúng 4-5 lần trừ (3đ), đúng 2-3 lần (2đ), đúng 1 lần (1đ).</span>
                                 </div>
-                                <div class="col-md-6 bg-card-section p-3 rounded border">
+                                <div class="col-md-6 bg-light p-3 rounded border">
                                     <label class="form-label small fw-bold text-primary">4. Ngôn ngữ nhắc lại (Tối đa 3đ)</label>
                                     <input type="number" id="moca_sub_lang" class="form-control form-control-sm moca-sub" min="0" max="3" value="0" oninput="calcMoCATotal()">
-                                    <span class="moca-guide"><b>Quy tắc chấm:</b> Nhắc lại chính xác câu phức thứ nhất (1đ), nhắc lại chính xác câu phức thứ hai (1đ). Liệt kê ngôn từ: Kể được ≥11 từ bắt đầu bằng chữ cái quy định trong 1 phút (1đ).</span>
+                                    <span class="moca-guide">Nhắc lại chính xác câu phức thứ nhất (1đ), câu thứ hai (1đ). Kể được ≥11 từ bắt đầu bằng chữ cái quy định trong 1 phút (1đ).</span>
                                 </div>
-                                <div class="col-md-4 bg-card-section p-3 rounded border">
+                                <div class="col-md-4 bg-light p-3 rounded border">
                                     <label class="form-label small fw-bold text-primary">5. Tính trừu tượng (Tối đa 2đ)</label>
                                     <input type="number" id="moca_sub_abstr" class="form-control form-control-sm moca-sub" min="0" max="2" value="0" oninput="calcMoCATotal()">
-                                    <span class="moca-guide"><b>Quy tắc chấm:</b> Tìm đúng từ khái quát điểm chung: Quả cam - quả chuối = Trái cây/Hoa quả (1đ). Thước kẻ - đồng hồ = Dụng cụ đo lường (1đ). Các câu trả lời cụ thể, không trừu tượng chấm 0đ.</span>
+                                    <span class="moca-guide">Tìm từ khái quát điểm chung: Quả cam-chuối = Trái cây (1đ). Thước kẻ-đồng hồ = Dụng cụ đo lường (1đ).</span>
                                 </div>
-                                <div class="col-md-4 bg-card-section p-3 rounded border">
+                                <div class="col-md-4 bg-light p-3 rounded border">
                                     <label class="form-label small fw-bold text-primary">6. Gợi nhớ trì hoãn muộn (Tối đa 5đ)</label>
                                     <input type="number" id="moca_sub_recall" class="form-control form-control-sm moca-sub" min="0" max="5" value="0" oninput="calcMoCATotal()">
-                                    <span class="moca-guide"><b>Quy tắc chấm:</b> Nhớ lại tự do hoàn toàn không có gợi ý sau một khoảng hoãn. Trả lời đúng mỗi từ trong danh mục 5 từ chuẩn ban đầu ghi nhận trực tiếp 1đ/từ.</span>
+                                    <span class="moca-guide">Nhớ lại tự do hoàn toàn không có gợi ý sau khoảng hoãn: Ghi nhận đúng 1đ/từ (Tối đa 5 từ).</span>
                                 </div>
-                                <div class="col-md-4 bg-card-section p-3 rounded border">
+                                <div class="col-md-4 bg-light p-3 rounded border">
                                     <label class="form-label small fw-bold text-primary">7. Định hướng (Tối đa 6đ)</label>
                                     <input type="number" id="moca_sub_orient" class="form-control form-control-sm moca-sub" min="0" max="6" value="0" oninput="calcMoCATotal()">
-                                    <span class="moca-guide"><b>Quy tắc chấm:</b> Yêu cầu trả lời chính xác thông tin thực tế tại thời điểm phỏng vấn bao gồm: Ngày, Tháng, Năm, Thứ, Tên nơi chốn (Bệnh viện), Tỉnh/Thành phố. Ghi nhận 1đ cho mỗi câu trả lời đúng tuyệt đối.</span>
+                                    <span class="moca-guide">Nói chính xác: Ngày, Tháng, Năm, Thứ, Tên nơi chốn (Bệnh viện), Tỉnh/Thành phố (1đ/mục).</span>
                                 </div>
                                 <div class="col-md-12 mt-2">
                                     <label class="form-label small fw-bold text-success">TỔNG ĐIỂM MoCA NỀN TỰ ĐỘNG (Thang 0-30 điểm)</label>
-                                    <input type="number" id="d13_moca" class="form-control form-control-lg fw-bold text-success bg-white border-success shadow-none" readonly value="0">
+                                    <input type="number" id="d13_moca" class="form-control form-control-lg fw-bold text-success bg-white border-success" readonly value="0">
                                 </div>
                             </div>
                         </div>
@@ -437,7 +433,7 @@
 
                 <div class="tab-pane fade" id="sec-p5-6" role="tabpanel" aria-labelledby="tab-p5-6">
                     <div class="card">
-                        <div class="card-header bg-primary text-white">PHẦN V. XẾT NGHIỆM NỀN</div>
+                        <div class="card-header bg-primary text-white">PHẦN V. XÉT NGHIỆM NỀN</div>
                         <div class="card-body">
                             <h5 class="fw-bold text-primary mb-3"><i class="fa-solid fa-file-medical-zone"></i> 5.1 Chỉ số Xét nghiệm trong vòng 72h đầu nhập viện</h5>
                             <div class="row g-3 border-bottom pb-4 mb-3">
@@ -492,7 +488,7 @@
                     <div class="card border-info">
                         <div class="card-header bg-info text-dark fw-bold">PHẦN VI. QUY TRÌNH & THÔNG TIN TIÊM VẮC-XIN TẠI GIƯỜNG</div>
                         <div class="card-body">
-                            <div class="row g-3 mb-3">
+                            <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Phân nhóm sau tư vấn</label>
                                     <div class="btn-group-toggle d-flex">
@@ -504,14 +500,14 @@
                                 </div>
                                 <div class="col-md-6 d-none" id="reason_refuse_div">
                                     <label class="form-label small fw-bold">Lý do từ chối tiêm chủng</label>
-                                    <input type="text" id="c09_reason" class="form-control" placeholder="Sợ tai biến/Kinh tế...">
+                                    <input type="text" id="c09_reason" class="form-control" placeholder="Ghi nhận lý do...">
                                 </div>
                             </div>
 
                             <div id="vaccine_details_section" class="mt-4 border-top pt-3 d-none">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="fw-bold text-primary mb-0"><i class="fa-solid fa-circle-info me-2"></i>Bản ghi Đồng tiêm chủng chủng chủng (Co-administration)</h6>
-                                    <button type="button" class="btn btn-sm btn-outline-primary fw-bold" onclick="addVaccineRow()"><i class="fa-solid fa-plus"></i> Thêm bản ghi vắc-xin đồng tiêm</button>
+                                    <h6 class="fw-bold text-primary mb-0"><i class="fa-solid fa-circle-info me-2"></i>Bản ghi Đồng tiêm chủng (Co-administration)</h6>
+                                    <button type="button" class="btn btn-sm btn-outline-primary fw-bold" onclick="addVaccineRow()"><i class="fa-solid fa-plus"></i> Thêm mũi vắc-xin đồng tiêm</button>
                                 </div>
                                 <div id="vaccine_rows_container">
                                     </div>
@@ -565,15 +561,15 @@
                                 <div class="col-md-6">
                                     <label class="form-label small">Có phản vệ trong 60 phút đầu?</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="g14_anaph" id="g14_0" value="0"><label class="btn w-100" for="g14_0">Không có</label>
                                         <input type="radio" class="btn-check" name="g14_anaph" id="g14_1" value="1"><label class="btn w-100" for="g14_1">CÓ PHẢN VỆ</label>
+                                        <input type="radio" class="btn-check" name="g14_anaph" id="g14_0" value="0"><label class="btn w-100" for="g14_0">Không có</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small">Biến cố bất lợi nghiêm trọng SAE (30 ngày)</label>
                                     <div class="btn-group-toggle d-flex">
-                                        <input type="radio" class="btn-check" name="g16_sae" id="g16_0" value="0"><label class="btn w-100" for="g16_0">Không có</label>
                                         <input type="radio" class="btn-check" name="g16_sae" id="g16_1" value="1"><label class="btn w-100" for="g16_1">CÓ SAE</label>
+                                        <input type="radio" class="btn-check" name="g16_sae" id="g16_0" value="0"><label class="btn w-100" for="g16_0">Không có</label>
                                     </div>
                                 </div>
                             </div>
@@ -613,7 +609,7 @@
                         <div class="card-body">
                             
                             <h4 class="fw-bold text-success border-bottom pb-2 mb-3"><i class="fa-solid fa-calendar-check me-2"></i>MỐC TÁI KHÁM 6 THÁNG (T6)</h4>
-                            <h6 class="fw-bold text-dark mb-2">9.1.1 Phân rã chấm điểm MoCA mốc T6 (Khung tra cứu nhanh)</h6>
+                            <h6 class="fw-bold text-dark mb-2">9.1.1 Khung tra cứu phân rã chấm điểm MoCA mốc T6</h6>
                             <div class="row g-2 bg-light p-3 rounded border mb-3">
                                 <div class="col-md-2"><label class="form-label small">Thị không gian (0-5)</label><input type="number" id="t6_sub_exec" class="form-control form-control-sm t6-moca-sub" min="0" max="5" value="0" oninput="calcMoCAT6()"></div>
                                 <div class="col-md-2"><label class="form-label small">Định danh (0-3)</label><input type="number" id="t6_sub_name" class="form-control form-control-sm t6-moca-sub" min="0" max="3" value="0" oninput="calcMoCAT6()"></div>
@@ -624,11 +620,11 @@
                                 <div class="col-md-3"><label class="form-label small">Định hướng (0-6)</label><input type="number" id="t6_sub_orient" class="form-control form-control-sm t6-moca-sub" min="0" max="6" value="0" oninput="calcMoCAT6()"></div>
                                 <div class="col-md-3"><label class="form-label small fw-bold text-success">Tổng điểm MoCA T6</label><input type="number" id="i01_moca_t6" class="form-control form-control-sm bg-white fw-bold border-success text-success" readonly value="0"></div>
                                 <div class="col-md-3"><label class="form-label small fw-bold text-dark">Thang CFS mốc T6</label><input type="number" min="1" max="9" id="i03_cfs_t6" class="form-control form-control-sm border-secondary"></div>
-                                <div class="col-md-3"><label class="form-label small fw-bold text-dark">Tổng điểm Barthel T6</label><input type="number" min="0" max="100" id="i04_bar_t6" class="form-control form-control-sm border-secondary" placeholder="Nhập tổng 0-100"></div>
+                                <div class="col-md-3"><label class="form-label small fw-bold text-dark">Tổng điểm Barthel T6</label><input type="number" min="0" max="100" id="i04_bar_t6" class="form-control form-control-sm border-secondary" placeholder="Tổng 0-100"></div>
                             </div>
 
                             <h4 class="fw-bold text-success border-bottom pb-2 mb-3 mt-4"><i class="fa-solid fa-calendar-check me-2"></i>MỐC TÁI KHÁM 12 THÁNG (T12)</h4>
-                            <h6 class="fw-bold text-dark mb-2">9.2.1 Phân rã chấm điểm MoCA mốc T12 (Khung tra cứu nhanh)</h6>
+                            <h6 class="fw-bold text-dark mb-2">9.2.1 Khung tra cứu phân rã chấm điểm MoCA mốc T12</h6>
                             <div class="row g-2 bg-light p-3 rounded border mb-3">
                                 <div class="col-md-2"><label class="form-label small">Thị không gian (0-5)</label><input type="number" id="t12_sub_exec" class="form-control form-control-sm t12-moca-sub" min="0" max="5" value="0" oninput="calcMoCAT12()"></div>
                                 <div class="col-md-2"><label class="form-label small">Định danh (0-3)</label><input type="number" id="t12_sub_name" class="form-control form-control-sm t12-moca-sub" min="0" max="3" value="0" oninput="calcMoCAT12()"></div>
@@ -639,7 +635,7 @@
                                 <div class="col-md-3"><label class="form-label small">Định hướng (0-6)</label><input type="number" id="t12_sub_orient" class="form-control form-control-sm t12-moca-sub" min="0" max="6" value="0" oninput="calcMoCAT12()"></div>
                                 <div class="col-md-3"><label class="form-label small fw-bold text-success">Tổng điểm MoCA T12</label><input type="number" id="i08_moca_t12" class="form-control form-control-sm bg-white fw-bold border-success text-success" readonly value="0"></div>
                                 <div class="col-md-3"><label class="form-label small fw-bold text-dark">Thang CFS mốc T12</label><input type="number" min="1" max="9" id="i10_cfs_t12" class="form-control form-control-sm border-secondary"></div>
-                                <div class="col-md-3"><label class="form-label small fw-bold text-dark">Tổng điểm Barthel T12</label><input type="number" min="0" max="100" id="i11_bar_t12" class="form-control form-control-sm border-secondary" placeholder="Nhập tổng 0-100"></div>
+                                <div class="col-md-3"><label class="form-label small fw-bold text-dark">Tổng điểm Barthel T12</label><input type="number" min="0" max="100" id="i11_bar_t12" class="form-control form-control-sm border-secondary" placeholder="Tổng 0-100"></div>
                             </div>
 
                             <div class="row pt-3 border-top mt-3">
@@ -663,7 +659,7 @@
 </div>
 
 <script>
-    let geriatric_db = JSON.parse(localStorage.getItem('geriatric_cohort_db_v5')) || {};
+    let geriatric_db = JSON.parse(localStorage.getItem('geriatric_cohort_db_v6')) || {};
     let activePatientId = null;
     let globalAge = null;
     let vaccineRowCount = 0;
@@ -741,6 +737,7 @@
         document.getElementById('d13_moca').value = total;
     }
 
+    // Tải hàm tính toán mốc T6 và T12 riêng biệt không phụ thuộc lẫn nhau
     function calcMoCAT6() {
         let total = 0;
         document.querySelectorAll('.t6-moca-sub').forEach(input => { total += parseInt(input.value) || 0; });
@@ -845,6 +842,54 @@
         }
     }
 
+    function createNewPatient() {
+        activePatientId = null;
+        document.getElementById('editing_label').innerText = "BN MỚI";
+        document.getElementById('patient_id').disabled = false;
+        
+        document.getElementById('patient_id').value = "";
+        document.getElementById('researcher_name').value = "";
+        document.getElementById('a00_name').value = "";
+        document.getElementById('a02_dob').value = "";
+        document.getElementById('adm_hoc_van').value = "";
+        document.getElementById('adm_nghe_nghiep').value = "";
+        document.getElementById('adm_hon_nhan').value = "";
+        document.getElementById('adm_song_voi').value = "";
+        document.getElementById('adm_khu_vuc').value = "";
+        document.getElementById('adm_kinh_te').value = "";
+        document.getElementById('adm_bhit').value = "";
+        document.getElementById('adm_sdt').value = "";
+        document.getElementById('a06_dept').value = "";
+        document.getElementById('a07_dov').value = "";
+        document.getElementById('a05_ba_num').value = "";
+        document.getElementById('d01_height').value = "";
+        document.getElementById('d02_weight').value = "";
+        document.getElementById('e04_creat').value = "";
+        document.getElementById('pre_creat').value = "";
+        document.getElementById('c09_reason').value = "";
+        document.getElementById('i01_moca_t6').value = "";
+        document.getElementById('i03_cfs_t6').value = "";
+        document.getElementById('i04_bar_t6').value = "";
+        document.getElementById('i08_moca_t12').value = "";
+        document.getElementById('i10_cfs_t12').value = "";
+        document.getElementById('i11_bar_t12').value = "";
+        document.getElementById('i15_status').value = "1";
+        
+        document.querySelectorAll('.moca-sub').forEach(input => input.value = 0);
+        document.querySelectorAll('.t6-moca-sub').forEach(input => input.value = 0);
+        document.querySelectorAll('.t12-moca-sub').forEach(input => input.value = 0);
+        document.getElementById('d13_moca').value = 0;
+        
+        document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+        document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+        
+        document.getElementById('vaccine_rows_container').innerHTML = "";
+        vaccineRowCount = 0;
+        addVaccineRow();
+
+        calculateAge(); calculateBMI(); calcBarthel(); calcCCI(); toggleVaccineSection();
+    }
+
     function saveCurrentPatient() {
         const id = document.getElementById('patient_id').value.trim().toUpperCase();
         if (!id) { alert("Yêu cầu bắt buộc nhập Mã Bệnh Nhân!"); return; }
@@ -855,6 +900,8 @@
         const cfs = document.querySelector('input[name="d09_cfs"]:checked');
         const gr = document.querySelector('input[name="c08_group"]:checked');
         const cam = document.querySelector('input[name="d15_cam"]:checked');
+        const anaph = document.querySelector('input[name="g14_anaph"]:checked');
+        const sae = document.querySelector('input[name="g16_sae"]:checked');
 
         let record = {
             Ma_BN: id, NCV: document.getElementById('researcher_name').value, Ho_Ten: document.getElementById('a00_name').value,
@@ -868,10 +915,31 @@
             T0_MoCA_Total: document.getElementById('d13_moca').value, T0_CAM: cam ? cam.value : "", Height: document.getElementById('d01_height').value, Weight: document.getElementById('d02_weight').value,
             Creatinine: document.getElementById('e04_creat').value, Pre_Creatinine: document.getElementById('pre_creat').value,
             Phan_Nhom: gr ? gr.value : "", Ly_Do_Refuse: document.getElementById('c09_reason').value,
+            SAE_Phan_Ve: anaph ? anaph.value : "", SAE_30_Ngay: sae ? sae.value : "",
             T6_MoCA: document.getElementById('i01_moca_t6').value, T6_CFS: document.getElementById('i03_cfs_t6').value, T6_Barthel: document.getElementById('i04_bar_t6').value,
             T12_MoCA: document.getElementById('i08_moca_t12').value, T12_CFS: document.getElementById('i10_cfs_t12').value, T12_Barthel: document.getElementById('i11_bar_t12').value,
             Trang_Thai_Cuoi: document.getElementById('i15_status').value
         };
+
+        // Đọc phân rã MoCA nền phục vụ SPSS/R
+        record.MoCA_Exec_T0 = document.getElementById('moca_sub_exec').value;
+        record.MoCA_Name_T0 = document.getElementById('moca_sub_name').value;
+        record.MoCA_Attn_T0 = document.getElementById('moca_sub_attn').value;
+        record.MoCA_Lang_T0 = document.getElementById('moca_sub_lang').value;
+        record.MoCA_Abstr_T0 = document.getElementById('moca_sub_abstr').value;
+        record.MoCA_Recall_T0 = document.getElementById('moca_sub_recall').value;
+        record.MoCA_Orient_T0 = document.getElementById('moca_sub_orient').value;
+
+        // Đọc phân rã MoCA mốc T6 & T12
+        ['t6', 't12'].forEach(time => {
+            record[`MoCA_Exec_${time.toUpperCase()}`] = document.getElementById(`${time}_sub_exec`).value;
+            record[`MoCA_Name_${time.toUpperCase()}`] = document.getElementById(`${time}_sub_name`).value;
+            record[`MoCA_Attn_${time.toUpperCase()}`] = document.getElementById(`${time}_sub_attn`).value;
+            record[`MoCA_Lang_${time.toUpperCase()}`] = document.getElementById(`${time}_sub_lang`).value;
+            record[`MoCA_Abstr_${time.toUpperCase()}`] = document.getElementById(`${time}_sub_abstr`).value;
+            record[`MoCA_Recall_${time.toUpperCase()}`] = document.getElementById(`${time}_sub_recall`).value;
+            record[`MoCA_Orient_${time.toUpperCase()}`] = document.getElementById(`${time}_sub_orient`).value;
+        });
 
         let list = [];
         document.querySelectorAll('.vaccine-item-row').forEach(row => {
@@ -899,7 +967,7 @@
         });
 
         geriatric_db[id] = record;
-        localStorage.setItem('geriatric_cohort_db_v5', JSON.stringify(geriatric_db));
+        localStorage.setItem('geriatric_cohort_db_v6', JSON.stringify(geriatric_db));
         alert(`Đã đồng bộ thành công dữ liệu dọc cho BN: ${id}`);
         activePatientId = id; document.getElementById('editing_label').innerText = id;
         renderPatientList();
@@ -920,7 +988,27 @@
         document.getElementById('e04_creat').value = p.Creatinine || ""; document.getElementById('pre_creat').value = p.Pre_Creatinine || "";
         document.getElementById('c09_reason').value = p.Ly_Do_Refuse || "";
         
+        // Trả số liệu phân rã MoCA T0
+        document.getElementById('moca_sub_exec').value = p.MoCA_Exec_T0 || 0;
+        document.getElementById('moca_sub_name').value = p.MoCA_Name_T0 || 0;
+        document.getElementById('moca_sub_attn').value = p.MoCA_Attn_T0 || 0;
+        document.getElementById('moca_sub_lang').value = p.MoCA_Lang_T0 || 0;
+        document.getElementById('moca_sub_abstr').value = p.MoCA_Abstr_T0 || 0;
+        document.getElementById('moca_sub_recall').value = p.MoCA_Recall_T0 || 0;
+        document.getElementById('moca_sub_orient').value = p.MoCA_Orient_T0 || 0;
         document.getElementById('d13_moca').value = p.T0_MoCA_Total || 0;
+
+        // Trả số liệu phân rã MoCA T6 & T12
+        ['t6', 't12'].forEach(time => {
+            document.getElementById(`${time}_sub_exec`).value = p[`MoCA_Exec_${time.toUpperCase()}`] || 0;
+            document.getElementById(`${time}_sub_name`).value = p[`MoCA_Name_${time.toUpperCase()}`] || 0;
+            document.getElementById(`${time}_sub_attn`).value = p[`MoCA_Attn_${time.toUpperCase()}`] || 0;
+            document.getElementById(`${time}_sub_lang`).value = p[`MoCA_Lang_${time.toUpperCase()}`] || 0;
+            document.getElementById(`${time}_sub_abstr`).value = p[`MoCA_Abstr_${time.toUpperCase()}`] || 0;
+            document.getElementById(`${time}_sub_recall`).value = p[`MoCA_Recall_${time.toUpperCase()}`] || 0;
+            document.getElementById(`${time}_sub_orient`).value = p[`MoCA_Orient_${time.toUpperCase()}`] || 0;
+        });
+        
         document.getElementById('i01_moca_t6').value = p.T6_MoCA || 0; document.getElementById('i03_cfs_t6').value = p.T6_CFS || ""; document.getElementById('i04_bar_t6').value = p.T6_Barthel || "";
         document.getElementById('i08_moca_t12').value = p.T12_MoCA || 0; document.getElementById('i10_cfs_t12').value = p.T12_CFS || ""; document.getElementById('i11_bar_t12').value = p.T12_Barthel || "";
         document.getElementById('i15_status').value = p.Trang_Thai_Cuoi || "1";
@@ -931,6 +1019,8 @@
         if(p.T0_CFS) document.getElementById(`cfs_${p.T0_CFS}`).checked = true;
         if(p.Phan_Nhom) document.getElementById(p.Phan_Nhom === "1" ? "c08_n1" : "c08_n2").checked = true;
         if(p.T0_CAM) document.getElementById(`cam_${p.T0_CAM}`).checked = true;
+        if(p.SAE_Phan_Ve) document.getElementById(p.SAE_Phan_Ve === "1" ? "g14_1" : "g14_0").checked = true;
+        if(p.SAE_30_Ngay) document.getElementById(p.SAE_30_Ngay === "1" ? "g16_1" : "g16_0").checked = true;
 
         const container = document.getElementById('vaccine_rows_container'); container.innerHTML = ""; vaccineRowCount = 0;
         if(p.Vaccines_CoAdmin_JSON) {
